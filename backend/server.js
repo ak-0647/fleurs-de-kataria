@@ -206,6 +206,22 @@ async function initSchemas(p) {
       );
     `);
 
+    // Seed initial flowers if empty
+    const [flowerCount] = await p.query('SELECT COUNT(*) as count FROM flowers');
+    if (flowerCount[0].count === 0) {
+      console.log('🌱 Seeding initial masterpieces...');
+      const initialFlowers = [
+        ['Royal Velvet Rose', 'A deep crimson rose of unparalleled elegance, perfect for grand gestures.', 2499, 'https://images.unsplash.com/photo-1548610762-7c6abcd94368?auto=format&fit=crop&q=80', 'Rose', 'Red', 'Anniversary'],
+        ['Midnight Orchid', 'Rare purple orchid that blooms with a mysterious aura and sweet fragrance.', 3899, 'https://images.unsplash.com/photo-1534885391148-4330f509164d?auto=format&fit=crop&q=80', 'Orchid', 'Purple', 'Just Because'],
+        ['Summer Sun Lily', 'Vibrant golden lilies that bring the warmth of summer to any space.', 1899, 'https://images.unsplash.com/photo-1508610048659-a06b669e3321?auto=format&fit=crop&q=80', 'Lily', 'Yellow', 'Birthday'],
+        ['Pearlescent Tulip', 'Soft white tulips with a subtle shimmer, symbolizing purity and new beginnings.', 1599, 'https://images.unsplash.com/photo-1544833332-9cb5259cf59d?auto=format&fit=crop&q=80', 'Tulip', 'White', 'Wedding'],
+        ['Blushing Peony', 'Luxurious pink peonies with layers of delicate petals, an absolute showstopper.', 4299, 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&q=80', 'Mixed', 'Pink', 'Anniversary']
+      ];
+      for (const f of initialFlowers) {
+        await p.query('INSERT INTO flowers (name, description, price, image_url, category, color, occasion) VALUES (?, ?, ?, ?, ?, ?, ?)', f);
+      }
+    }
+
     console.log('Database schemas initialized safely.');
   } catch (err) {
     console.error('Failed to initialize database schemas:', err);
