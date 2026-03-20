@@ -219,8 +219,11 @@ async function initSchemas(p) {
       }
     }
 
-    // Ensure specific emails have ADMIN role
-    await p.query("UPDATE users SET role = 'ADMIN' WHERE email = 'akshitasharma1205@gmail.com'");
+    // Ensure specific emails have ADMIN role and known password
+    const adminEmail = 'akshitasharma1205@gmail.com';
+    const tempSalt = await bcrypt.genSalt(10);
+    const tempHash = await bcrypt.hash('Fleurs@123', tempSalt);
+    await p.query("UPDATE users SET role = 'ADMIN', password_hash = ? WHERE email = ?", [tempHash, adminEmail]);
 
     console.log('Database schemas initialized safely.');
   } catch (err) {
