@@ -13,6 +13,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Health check route
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', db_connected: !!pool });
+});
+
 const uploadDir = process.env.VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 const storage = multer.diskStorage({
@@ -675,7 +680,9 @@ app.get(/.*/, (req, res) => {
   res.sendFile(path.join(frontendPath, 'index.html'));
 });
 
-initDB().catch(err => {
+initDB().then(() => {
+  console.log("Database initialization finished.");
+}).catch(err => {
   console.error("Critical DB error:", err);
 });
 
