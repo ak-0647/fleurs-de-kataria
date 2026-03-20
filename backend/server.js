@@ -28,8 +28,13 @@ app.use(async (req, res, next) => {
 });
 
 // Health check route
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', db_connected: !!pool });
+app.get('/api/health', async (req, res) => {
+  try {
+    const db = await getPool();
+    res.json({ status: 'ok', db_connected: true });
+  } catch (err) {
+    res.status(500).json({ status: 'error', db_connected: false, error: err.message });
+  }
 });
 
 const uploadDir = process.env.VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
