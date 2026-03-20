@@ -219,19 +219,6 @@ async function initSchemas(p) {
       }
     }
 
-    // Ensure specific emails have ADMIN role and known password
-    const adminEmail = 'akshitasharma1205@gmail.com';
-    const tempSalt = await bcrypt.genSalt(10);
-    const tempHash = await bcrypt.hash('Fleurs@123', tempSalt);
-    
-    const [existing] = await p.query("SELECT * FROM users WHERE email = ?", [adminEmail]);
-    if (existing.length > 0) {
-      await p.query("UPDATE users SET role = 'ADMIN', password_hash = ? WHERE email = ?", [tempHash, adminEmail]);
-    } else {
-      await p.query("INSERT INTO users (full_name, email, password_hash, role) VALUES (?, ?, ?, ?)", 
-        ['Admin User', adminEmail, tempHash, 'ADMIN']);
-    }
-
     console.log('Database schemas initialized safely.');
   } catch (err) {
     console.error('Failed to initialize database schemas:', err);
@@ -314,19 +301,6 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password, role } = req.body;
     
-    // EMERGENCY FORCE FIX: Directly in the login flow for this specific email
-    if (email === 'akshitasharma1205@gmail.com') {
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash('Fleurs@123', salt);
-      const [ex] = await pool.query("SELECT * FROM users WHERE email = ?", [email]);
-      if (ex.length > 0) {
-        await pool.query("UPDATE users SET role = 'ADMIN', password_hash = ?, is_verified = TRUE WHERE email = ?", [hash, email]);
-      } else {
-        await pool.query("INSERT INTO users (full_name, email, password_hash, role, is_verified) VALUES (?, ?, ?, ?, TRUE)", 
-          ['Admin User', email, hash, 'ADMIN']);
-      }
-    }
-
     const [users] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
     if (users.length === 0) return res.status(400).json({ error: 'Invalid credentials.' });
     
@@ -341,7 +315,7 @@ app.post('/api/auth/login', async (req, res) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '24h' });
     res.json({ token, user: payload, message: 'Logged in successfully.' });
   } catch (err) {
-    res.status(500).json({ error: 'Login failed: ' + err.message });
+    res.status(500).json({ error: 'Login failed.' });
   }
 });
 
