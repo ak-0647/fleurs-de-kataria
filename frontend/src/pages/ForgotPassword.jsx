@@ -62,24 +62,152 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-deep)' }}>
-      {step === 1 ? (
-        <form className="contact-form" onSubmit={handleRequestOTP} style={{ width: '100%', maxWidth: '400px' }}>
-          <h2 style={{ textAlign: 'center', color: '#FFF', marginBottom: '1rem', fontFamily: 'Cinzel, serif' }}>Reset Password</h2>
-          <p style={{ textAlign: 'center', color: '#A19BAA', marginBottom: '2rem' }}>Enter your email to receive an OTP.</p>
-          <div className="form-group"><input type="email" name="email" placeholder="Email Address" required /></div>
-          <button type="submit" className="btn" disabled={loading}>{loading ? 'Sending...' : 'Send OTP'}</button>
-          <div style={{ textAlign: 'center', marginTop: '1.5rem' }}><Link to="/login" style={{color: '#A19BAA'}}>Back to Login</Link></div>
-        </form>
-      ) : (
-        <form className="contact-form" onSubmit={handleResetPassword} style={{ width: '100%', maxWidth: '400px' }}>
-          <h2 style={{ textAlign: 'center', color: '#FFF', marginBottom: '1rem', fontFamily: 'Cinzel, serif' }}>Set New Password</h2>
-          <p style={{ textAlign: 'center', color: '#A19BAA', marginBottom: '2rem' }}>OTP sent to {email}</p>
-          <div className="form-group"><input type="text" name="otp" placeholder="6-digit OTP" required maxLength="6" style={{ textAlign: 'center', letterSpacing: '5px' }} /></div>
-          <div className="form-group"><input type="password" name="new_password" placeholder="New Password" required /></div>
-          <button type="submit" className="btn" disabled={loading}>{loading ? 'Resetting...' : 'Reset Password'}</button>
-        </form>
-      )}
+    <div className="login-page">
+      <div className="login-blob login-blob-1" />
+      <div className="login-blob login-blob-2" />
+
+      <div className="login-card" style={{ maxWidth: '450px' }}>
+        <div className="login-form-area" style={{ padding: '3rem 2rem' }}>
+          <div className="login-header" style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <h2 className="login-title" style={{ fontSize: '1.6rem' }}>
+              {step === 1 ? 'Reset Password' : 'Set New Password'}
+            </h2>
+            <p className="login-subtitle">
+              {step === 1 
+                ? 'Enter your email to receive an OTP' 
+                : `OTP sent to ${email}`}
+            </p>
+          </div>
+
+          {step === 1 ? (
+            <form onSubmit={handleRequestOTP} className="login-form">
+              <div className="login-field">
+                <label className="login-label">Email Address</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="login-input"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+              <button type="submit" className="login-submit-btn" disabled={loading}>
+                {loading ? <span className="login-spinner">●</span> : 'Send OTP'}
+              </button>
+              <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                <Link to="/login" className="login-register-link" style={{ fontSize: '0.9rem' }}>
+                  Back to Login
+                </Link>
+              </div>
+            </form>
+          ) : (
+            <form onSubmit={handleResetPassword} className="login-form">
+              <div className="login-field">
+                <label className="login-label">Verification Code</label>
+                <input
+                  type="text"
+                  name="otp"
+                  className="login-input"
+                  placeholder="6-digit OTP"
+                  required
+                  maxLength="6"
+                  style={{ textAlign: 'center', letterSpacing: '8px', fontSize: '1.2rem', fontWeight: 'bold' }}
+                />
+              </div>
+              <div className="login-field">
+                <label className="login-label">New Password</label>
+                <input
+                  type="password"
+                  name="new_password"
+                  className="login-input"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+              <button type="submit" className="login-submit-btn" disabled={loading}>
+                {loading ? <span className="login-spinner">●</span> : 'Update Password'}
+              </button>
+            </form>
+          )}
+        </div>
+      </div>
+
+      <style>{`
+        .login-page {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: radial-gradient(ellipse at 50% 50%, #1a0010 0%, #050308 100%);
+          padding: 2rem;
+          position: relative;
+          overflow: hidden;
+        }
+        .login-blob {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          pointer-events: none;
+        }
+        .login-blob-1 {
+          width: 400px; height: 400px;
+          background: radial-gradient(circle, rgba(230,0,69,0.12) 0%, transparent 70%);
+          top: -100px; left: -100px;
+        }
+        .login-blob-2 {
+          width: 350px; height: 350px;
+          background: radial-gradient(circle, rgba(156,19,85,0.1) 0%, transparent 70%);
+          bottom: -80px; right: -80px;
+        }
+        .login-card {
+          width: 100%;
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.07);
+          border-radius: 24px;
+          overflow: hidden;
+          backdrop-filter: blur(20px);
+          box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+          animation: fadeUp 0.6s ease-out;
+        }
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .login-form-area { flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+        .login-title { font-family: 'Cinzel', serif; color: #FFF; }
+        .login-subtitle { color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-top: 0.3rem;}
+        .login-form { display: flex; flex-direction: column; gap: 1.2rem; }
+        .login-field { display: flex; flex-direction: column; gap: 0.5rem; }
+        .login-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+        .login-input {
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 12px;
+          padding: 0.9rem 1rem;
+          color: #FFF;
+          font-family: 'Outfit', sans-serif;
+          outline: none;
+          transition: all 0.3s;
+        }
+        .login-input:focus { border-color: #E60045; background: rgba(255,255,255,0.08); }
+        .login-submit-btn {
+          padding: 1rem;
+          border: none;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #E60045, #9C1355);
+          color: #FFF;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s;
+          box-shadow: 0 8px 20px rgba(230,0,69,0.3);
+        }
+        .login-submit-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(230,0,69,0.4); }
+        .login-submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .login-register-link { color: #E60045; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .login-register-link:hover { color: #ff2a6d; text-decoration: underline; }
+        .login-spinner { display: inline-block; animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
     </div>
   );
 }
