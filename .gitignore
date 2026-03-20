@@ -1,1 +1,8 @@
 .vercel
+.env
+node_modules
+dist
+.DS_Store
+backend/node_modules
+frontend/node_modules
+frontend/dist
