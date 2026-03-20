@@ -119,9 +119,9 @@ export default function CustomRequest() {
         </div>
 
         <div className="input-group">
-          <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Reference Image (Optional)</label>
+          <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Reference Image or Video (Optional)</label>
           <input 
-            type="file" accept="image/*" onChange={handleFileChange}
+            type="file" accept="image/*,video/*" onChange={handleFileChange}
             style={{ padding: '1rem 0', color: '#FFF' }}
           />
         </div>

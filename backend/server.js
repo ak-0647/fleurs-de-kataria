@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+const { put } = require('@vercel/blob');
 require('dotenv').config();
 
 const app = express();
@@ -37,14 +38,23 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-const uploadDir = process.env.VERCEL ? path.join('/tmp', 'uploads') : path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) { cb(null, uploadDir) },
-  filename: function (req, file, cb) { cb(null, Date.now() + path.extname(file.originalname)) }
+// Use memory storage for Multer in Vercel/Serverless environments
+const storage = multer.memoryStorage();
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit for videos
 });
-const upload = multer({ storage: storage });
-app.use('/uploads', express.static(uploadDir));
+
+// Helper for Vercel Blob
+async function uploadToBlob(file, prefix = 'uploads') {
+  if (!file) return null;
+  const filename = `${prefix}/${Date.now()}-${file.originalname}`;
+  const { url } = await put(filename, file.buffer, {
+    access: 'public',
+    token: process.env.BLOB_READ_WRITE_TOKEN
+  });
+  return url;
+}
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -522,12 +532,16 @@ app.post('/api/orders', authenticateUser, async (req, res) => {
 app.post('/api/custom-requests', authenticateUser, upload.single('image'), async (req, res) => {
   try {
     const { flower_selection, wrapping_style, ribbon_color, note, budget } = req.body;
-    const image_path = req.file ? '/uploads/' + req.file.filename : null;
     const userId = req.user.id;
+    
+    let filePath = null;
+    if (req.file) {
+      filePath = await uploadToBlob(req.file, 'custom');
+    }
 
     await pool.query(
       'INSERT INTO custom_requests (user_id, flower_selection, wrapping_style, ribbon_color, note, image_path, budget) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [userId, flower_selection, wrapping_style, ribbon_color, note, image_path, budget]
+      [userId, flower_selection, wrapping_style, ribbon_color, note, filePath, budget]
     );
 
     // Notify Admin via Email
@@ -668,29 +682,43 @@ app.get('/api/admin/flowers', authenticateAdmin, async (req, res) => {
   }
 });
 
-app.post('/api/admin/flowers', authenticateAdmin, async (req, res) => {
+app.post('/api/admin/flowers', authenticateAdmin, upload.single('flower_file'), async (req, res) => {
   try {
-    const { name, description, price, image_url, category, color, occasion } = req.body;
+    const { name, description, price, category, color, occasion } = req.body;
+    
+    let image_url = null;
+    if (req.file) {
+      image_url = await uploadToBlob(req.file, 'catalog');
+    }
+
     await pool.query(
       'INSERT INTO flowers (name, description, price, image_url, category, color, occasion) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [name, description, price, image_url, category, color, occasion]
     );
     res.status(201).json({ message: 'Flower added successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to add flower' });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to add flower: ' + err.message });
   }
 });
 
-app.put('/api/admin/flowers/:id', authenticateAdmin, async (req, res) => {
+app.put('/api/admin/flowers/:id', authenticateAdmin, upload.single('flower_file'), async (req, res) => {
   try {
-    const { name, description, price, image_url, category, color, occasion } = req.body;
+    const { name, description, price, category, color, occasion } = req.body;
+    
+    let { image_url } = req.body;
+    if (req.file) {
+      image_url = await uploadToBlob(req.file, 'catalog');
+    }
+
     await pool.query(
       'UPDATE flowers SET name = ?, description = ?, price = ?, image_url = ?, category = ?, color = ?, occasion = ? WHERE id = ?',
       [name, description, price, image_url, category, color, occasion, req.params.id]
     );
     res.json({ message: 'Flower updated successfully' });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to update flower' });
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update flower: ' + err.message });
   }
 });
 

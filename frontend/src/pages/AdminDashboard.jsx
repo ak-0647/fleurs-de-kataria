@@ -58,15 +58,29 @@ export default function AdminDashboard() {
 
   const handleFlowerSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const token = localStorage.getItem('fleurs_token');
       const method = editingFlower ? 'PUT' : 'POST';
       const url = editingFlower ? `/api/admin/flowers/${editingFlower.id}` : '/api/admin/flowers';
       
+      const data = new FormData();
+      data.append('name', flowerForm.name);
+      data.append('description', flowerForm.description);
+      data.append('price', flowerForm.price);
+      data.append('category', flowerForm.category);
+      data.append('color', flowerForm.color);
+      data.append('occasion', flowerForm.occasion);
+      if (e.target.flower_file.files[0]) {
+        data.append('flower_file', e.target.flower_file.files[0]);
+      } else if (editingFlower) {
+        data.append('image_url', flowerForm.image_url);
+      }
+      
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify(flowerForm)
+        headers: { 'Authorization': `Bearer ${token}` },
+        body: data
       });
       
       if (res.ok) {
@@ -76,10 +90,13 @@ export default function AdminDashboard() {
         setFlowerForm({ name: '', description: '', price: '', image_url: '', category: '', color: '', occasion: '' });
         fetchData();
       } else {
-        toast.error('Operation failed');
+        const errData = await res.json();
+        toast.error(errData.error || 'Operation failed');
       }
     } catch (err) {
       toast.error('Network error');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -342,8 +359,9 @@ export default function AdminDashboard() {
                   <input required className="filter-input" value={flowerForm.occasion} onChange={e => setFlowerForm({...flowerForm, occasion: e.target.value})} placeholder="e.g. Anniversary" />
                 </div>
                 <div style={{ gridColumn: 'span 2' }}>
-                  <label style={{ display: 'block', color: '#A19BAA', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Image URL</label>
-                  <input required className="filter-input" value={flowerForm.image_url} onChange={e => setFlowerForm({...flowerForm, image_url: e.target.value})} />
+                  <label style={{ display: 'block', color: '#A19BAA', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Upload Image/Video</label>
+                  <input type="file" name="flower_file" accept="image/*,video/*" className="filter-input" style={{ padding: '0.5rem' }} />
+                  {editingFlower && <p style={{ fontSize: '0.7rem', color: '#E60045', marginTop: '0.5rem' }}>Leave blank to keep current media</p>}
                 </div>
                 <div style={{ gridColumn: 'span 2', display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                   <button type="submit" className="btn" style={{ flex: 2 }}>{editingFlower ? 'Update Masterpiece' : 'Add to Collection'}</button>
