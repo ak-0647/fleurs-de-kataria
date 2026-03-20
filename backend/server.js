@@ -260,7 +260,7 @@ app.post('/api/auth/register', async (req, res) => {
     res.json({ message: 'OTP sent to email. Please verify.' });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error during registration.' });
+    res.status(500).json({ error: 'Server error: ' + err.message });
   }
 });
 
