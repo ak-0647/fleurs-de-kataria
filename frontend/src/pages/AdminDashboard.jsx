@@ -15,6 +15,8 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   
   const [showFlowerModal, setShowFlowerModal] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [confirmData, setConfirmData] = useState({ id: null, message: '' });
   const [editingFlower, setEditingFlower] = useState(null);
   const [flowerForm, setFlowerForm] = useState({
     name: '', description: '', price: '', image_url: '', category: '', color: '', occasion: ''
@@ -101,7 +103,13 @@ export default function AdminDashboard() {
   };
 
   const deleteFlower = async (id) => {
-    if (!window.confirm('Erase this masterpiece from the collection?')) return;
+    setConfirmData({ id, message: 'Erase this masterpiece from the collection?' });
+    setShowConfirm(true);
+  };
+
+  const executeDelete = async () => {
+    const { id } = confirmData;
+    setShowConfirm(false);
     try {
       const res = await fetch(`/api/admin/flowers/${id}`, {
         method: 'DELETE',
@@ -368,6 +376,30 @@ export default function AdminDashboard() {
                   <button type="button" className="btn" style={{ flex: 1, background: 'transparent', border: '1px solid #A19BAA', color: '#A19BAA' }} onClick={() => setShowFlowerModal(false)}>Cancel</button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {/* Custom Confirmation Modal */}
+        {showConfirm && (
+          <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+            <div style={{ background: 'rgba(15,5,10,0.95)', border: '1px solid rgba(230,0,69,0.3)', padding: '2.5rem', borderRadius: '24px', maxWidth: '400px', width: '100%', textAlign: 'center', boxShadow: '0 0 40px rgba(230,0,69,0.2)' }}>
+              <h3 style={{ fontFamily: 'Cinzel, serif', color: '#FBE29F', marginBottom: '1rem', fontSize: '1.5rem' }}>Are you sure?</h3>
+              <p style={{ color: '#A19BAA', marginBottom: '2rem', lineHeight: '1.6' }}>{confirmData.message}</p>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button 
+                  onClick={() => setShowConfirm(false)}
+                  style={{ flex: 1, padding: '0.8rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '12px', cursor: 'pointer' }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  onClick={executeDelete}
+                  style={{ flex: 1, padding: '0.8rem', background: '#E60045', border: 'none', color: '#FFF', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 5px 15px rgba(230,0,69,0.3)' }}
+                >
+                  Yes, Erase
+                </button>
+              </div>
             </div>
           </div>
         )}
