@@ -94,11 +94,8 @@ async function getPool() {
       pool = mysql.createPool({ ...dbConfig, database: process.env.DB_NAME });
     }
 
-    // Initialize schemas (check for users table)
-    const [rows] = await pool.query(`SHOW TABLES LIKE 'users'`);
-    if (rows.length === 0) {
-      await initSchemas(pool);
-    }
+    // Always run schema check/seed to ensure completeness
+    await initSchemas(pool);
 
     return pool;
   } catch (err) {
