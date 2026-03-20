@@ -13,6 +13,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Ensure DB pool is ready for all API requests
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api') && req.path !== '/api/health') {
+    try {
+      await getPool();
+      next();
+    } catch (err) {
+      return res.status(500).json({ error: 'Database connection failed. Please try again in 10 seconds.' });
+    }
+  } else {
+    next();
+  }
+});
+
 // Health check route
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', db_connected: !!pool });
@@ -27,9 +41,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 app.use('/uploads', express.static(uploadDir));
 
-const PORT = process.env.PORT || 5000;
-let pool;
-
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -43,38 +54,57 @@ transporter.verify((error, success) => {
   else console.log("✨ Email system is ready to send notifications!");
 });
 
-async function initDB() {
+const PORT = process.env.PORT || 5000;
+let pool;
+let isInitializing = false;
+
+async function getPool() {
+  if (pool) return pool;
+  if (isInitializing) {
+    while (isInitializing) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (pool) return pool;
+    }
+  }
+  isInitializing = true;
   try {
-    const connection = await mysql.createConnection({
+    const dbConfig = {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      port: process.env.DB_PORT || 3306,
-      ssl: {
-        minVersion: 'TLSv1.2',
-        rejectUnauthorized: true
-      }
-    });
-    
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
-    await connection.end();
-
-    pool = mysql.createPool({
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      port: process.env.DB_PORT || 3306,
-      ssl: {
-        minVersion: 'TLSv1.2',
-        rejectUnauthorized: true
-      },
+      port: process.env.DB_PORT || 4000,
+      ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: true },
       waitForConnections: true,
-      connectionLimit: 10,
+      connectionLimit: 5,
       queueLimit: 0
-    });
+    };
+    try {
+      const tempPool = mysql.createPool({ ...dbConfig, database: process.env.DB_NAME });
+      await tempPool.query('SELECT 1');
+      pool = tempPool;
+    } catch (dbErr) {
+      const connection = await mysql.createConnection(dbConfig);
+      await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.DB_NAME}\`;`);
+      await connection.end();
+      pool = mysql.createPool({ ...dbConfig, database: process.env.DB_NAME });
+    }
+    return pool;
+  } catch (err) {
+    console.error('DB Init Error:', err);
+    throw err;
+  } finally {
+    isInitializing = false;
+  }
+}
 
-    await pool.query(`
+// Keep a simple initDB for legacy calls if any, but it now uses getPool
+async function initDB() {
+  await getPool();
+}
+
+async function initSchemas(p) {
+  try {
+    await p.query(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         role VARCHAR(20) DEFAULT 'USER',
@@ -89,7 +119,7 @@ async function initDB() {
       );
     `);
 
-    await pool.query(`
+    await p.query(`
       CREATE TABLE IF NOT EXISTS otps (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(255) NOT NULL,
@@ -99,17 +129,20 @@ async function initDB() {
       );
     `);
 
-    await pool.query(`
+    await p.query(`
       CREATE TABLE IF NOT EXISTS flowers (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         description TEXT,
         price DECIMAL(10, 2) NOT NULL,
-        image_url TEXT
+        image_url TEXT,
+        category VARCHAR(50),
+        color VARCHAR(50),
+        occasion VARCHAR(50)
       );
     `);
 
-    await pool.query(`
+    await p.query(`
       CREATE TABLE IF NOT EXISTS inquiries (
         id INT AUTO_INCREMENT PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -119,13 +152,7 @@ async function initDB() {
       );
     `);
 
-    try {
-      await pool.query('ALTER TABLE flowers ADD COLUMN category VARCHAR(50)');
-      await pool.query('ALTER TABLE flowers ADD COLUMN color VARCHAR(50)');
-      await pool.query('ALTER TABLE flowers ADD COLUMN occasion VARCHAR(50)');
-    } catch(e) { /* Ignore if already exists */ }
-
-    await pool.query(`
+    await p.query(`
       CREATE TABLE IF NOT EXISTS orders (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT,
@@ -139,7 +166,7 @@ async function initDB() {
       );
     `);
 
-    await pool.query(`
+    await p.query(`
       CREATE TABLE IF NOT EXISTS order_items (
         id INT AUTO_INCREMENT PRIMARY KEY,
         order_id INT NOT NULL,
@@ -151,7 +178,7 @@ async function initDB() {
       );
     `);
 
-    await pool.query(`
+    await p.query(`
       CREATE TABLE IF NOT EXISTS custom_requests (
         id INT AUTO_INCREMENT PRIMARY KEY,
         user_id INT,
@@ -160,15 +187,12 @@ async function initDB() {
         ribbon_color VARCHAR(50),
         note TEXT,
         image_path TEXT,
+        budget VARCHAR(50),
         status VARCHAR(50) DEFAULT 'Pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
       );
     `);
-
-    try {
-      await pool.query('ALTER TABLE custom_requests ADD COLUMN budget VARCHAR(50)');
-    } catch(e) {}
 
     console.log('Database schemas initialized safely.');
   } catch (err) {
@@ -182,7 +206,6 @@ async function initDB() {
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { full_name, email, phone, sec_question, sec_answer, password } = req.body;
-    if (!pool) return res.status(500).json({ error: 'DB not ready' });
     
     // Force a single Master Admin account for demonstration (optional)
     const role = email.includes('admin') ? 'ADMIN' : 'USER';
