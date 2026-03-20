@@ -223,7 +223,14 @@ async function initSchemas(p) {
     const adminEmail = 'akshitasharma1205@gmail.com';
     const tempSalt = await bcrypt.genSalt(10);
     const tempHash = await bcrypt.hash('Fleurs@123', tempSalt);
-    await p.query("UPDATE users SET role = 'ADMIN', password_hash = ? WHERE email = ?", [tempHash, adminEmail]);
+    
+    const [existing] = await p.query("SELECT * FROM users WHERE email = ?", [adminEmail]);
+    if (existing.length > 0) {
+      await p.query("UPDATE users SET role = 'ADMIN', password_hash = ? WHERE email = ?", [tempHash, adminEmail]);
+    } else {
+      await p.query("INSERT INTO users (full_name, email, password_hash, role) VALUES (?, ?, ?, ?)", 
+        ['Admin User', adminEmail, tempHash, 'ADMIN']);
+    }
 
     console.log('Database schemas initialized safely.');
   } catch (err) {
