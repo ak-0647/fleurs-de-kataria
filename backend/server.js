@@ -219,6 +219,9 @@ async function initSchemas(p) {
       }
     }
 
+    // Ensure specific emails have ADMIN role
+    await p.query("UPDATE users SET role = 'ADMIN' WHERE email = 'akshitasharma1205@gmail.com'");
+
     console.log('Database schemas initialized safely.');
   } catch (err) {
     console.error('Failed to initialize database schemas:', err);
