@@ -352,7 +352,23 @@ app.post('/api/auth/forgot-password', async (req, res) => {
 
     res.json({ message: 'OTP sent to your email.' });
   } catch (err) {
-    res.status(500).json({ error: 'Request failed.' });
+    res.status(500).json({ error: 'Request failed: ' + err.message });
+  }
+});
+
+// TEMPORARY: Force reset password for recovery
+app.post('/api/auth/force-reset-admin', async (req, res) => {
+  try {
+    const { email, new_password, secret } = req.body;
+    if (secret !== 'fleurs_secret_999') return res.status(403).json({ error: 'Unauthorized' });
+    
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(new_password, salt);
+    
+    await pool.query('UPDATE users SET password_hash = ? WHERE email = ?', [hash, email]);
+    res.json({ message: 'Password reset successful for ' + email });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
