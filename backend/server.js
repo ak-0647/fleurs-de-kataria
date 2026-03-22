@@ -497,7 +497,7 @@ app.post('/api/orders', authenticateUser, async (req, res) => {
         const recipient = userRows[0].email;
         console.log(`📧 Attempting to send order confirmation to: ${recipient}`);
 
-        transporter.sendMail({
+        await transporter.sendMail({
           from: `"Fleurs de Kataria" <${process.env.SMTP_USER}>`,
           to: recipient,
           subject: `Order Confirmation - #${orderId}`,
@@ -506,7 +506,7 @@ app.post('/api/orders', authenticateUser, async (req, res) => {
           .catch(e => console.error(`❌ Email failed for ${recipient}:`, e));
         
         // Notify Admin
-        transporter.sendMail({
+        await transporter.sendMail({
           from: `"Fleurs de Kataria System" <${process.env.SMTP_USER}>`,
           to: process.env.SMTP_USER,
           subject: `✨ New Order Alert - #${orderId}`,
@@ -547,7 +547,7 @@ app.post('/api/custom-requests', authenticateUser, upload.single('image'), async
     // Notify Admin via Email
     const [userRows] = await pool.query('SELECT email, full_name FROM users WHERE id = ?', [userId]);
     if (userRows.length > 0) {
-      transporter.sendMail({
+      await transporter.sendMail({
         from: `"Fleurs de Kataria System" <${process.env.SMTP_USER}>`,
         to: process.env.SMTP_USER,
         subject: `🎨 New Custom Request Alert`,
@@ -633,7 +633,7 @@ app.put('/api/admin/orders/:id', authenticateAdmin, async (req, res) => {
        else if (status === 'Out for Delivery') message = `Your order #${req.params.id} is out for delivery!`;
        else if (status === 'Delivered') message = `Your order #${req.params.id} has been delivered successfully.`;
        
-       transporter.sendMail({
+       await transporter.sendMail({
           from: `"Fleurs de Kataria" <${process.env.SMTP_USER}>`,
           to: oldRows[0].email,
           subject: `Order Update - #${req.params.id}`,
