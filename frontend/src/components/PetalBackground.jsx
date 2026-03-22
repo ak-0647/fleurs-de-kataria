@@ -1,9 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTheme } from '../context/ThemeContext';
-
-gsap.registerPlugin(ScrollTrigger);
 
 // Authentic petal shapes (no circles or blobs)
 const PETAL_PATHS = [
@@ -79,19 +76,7 @@ const Petal = ({ index }) => {
       ease: 'sine.inOut',
     });
 
-    // Cinematic scroll drift
-    const driftIntensity = (index % 6 + 1) * 45;
-    gsap.to(petal, {
-      scrollTrigger: {
-        trigger: document.body,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 2,
-      },
-      x: `+=${(index % 2 === 0 ? 1 : -1) * driftIntensity}`,
-      y: `+=${driftIntensity * 0.4}`,
-      rotation: `+=${index % 2 === 0 ? 120 : -120}`,
-    });
+    // Removed scroll drift as requested so they only fall down
 
     return () => {
       gsap.killTweensOf(petal);
@@ -106,7 +91,7 @@ const Petal = ({ index }) => {
         top: 0,
         left: 0,
         pointerEvents: 'none',
-        zIndex: 1, // Ensure they are above opaque page backgrounds
+        zIndex: 0, // Fall behind cards
         width: `${size}px`,
         height: `${size}px`,
       }}
@@ -132,7 +117,7 @@ export default function PetalBackground() {
   const petals = Array.from({ length: 120 }); // Ultra rich density
 
   return (
-    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
       {petals.map((_, i) => (
         <Petal key={i} index={i} />
       ))}
