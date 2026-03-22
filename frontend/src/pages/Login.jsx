@@ -26,7 +26,7 @@ export default function Login() {
       if (res.ok) {
         toast.success(`Welcome back, ${result.user.name}!`);
         login(result.user, result.token);
-        navigate(result.user.role === 'ADMIN' ? '/admin' : '/about');
+        navigate('/about');
       } else {
         toast.error(result.error || 'Authentication failed');
       }
