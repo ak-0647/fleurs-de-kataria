@@ -2,6 +2,7 @@ import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
+import { useTheme } from '../context/ThemeContext';
 
 const ParticleSwarm = () => {
   const ref = useRef();
@@ -26,9 +27,12 @@ const ParticleSwarm = () => {
     }
   });
 
+  const { theme } = useTheme();
+  const color = theme === 'dark' ? '#E60045' : '#FF85A1';
+
   return (
     <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
-      <PointMaterial transparent color="#E60045" size={0.025} opacity={0.6} sizeAttenuation={true} depthWrite={false} blending={THREE.AdditiveBlending} />
+      <PointMaterial transparent color={color} size={0.025} opacity={0.6} sizeAttenuation={true} depthWrite={false} blending={theme === 'dark' ? THREE.AdditiveBlending : THREE.NormalBlending} />
     </Points>
   );
 };
@@ -46,6 +50,10 @@ const AbstractRose = () => {
   const petals = [];
   const layers = 8; // More layers for a dense rose look
   
+  const { theme } = useTheme();
+  const color = theme === 'dark' ? '#E60045' : '#FF85A1';
+  const emissive = theme === 'dark' ? '#8A0029' : '#FFB3C6';
+
   for (let layer = 0; layer < layers; layer++) {
     const petalsInLayer = 3 + layer * 3;
     
@@ -63,9 +71,9 @@ const AbstractRose = () => {
             <mesh position={[0, 0.8 + layer * 0.15, 0]} scale={[0.6 + layer * 0.1, 1.4 + layer * 0.1, 0.03]}>
               <sphereGeometry args={[1, 32, 32]} />
               <meshStandardMaterial 
-                color="#E60045" 
-                emissive="#8A0029" 
-                emissiveIntensity={0.4} 
+                color={color} 
+                emissive={emissive} 
+                emissiveIntensity={theme === 'dark' ? 0.4 : 0.2} 
                 roughness={0.5} 
                 metalness={0.2} 
                 transparent 
@@ -87,11 +95,15 @@ const AbstractRose = () => {
 };
 
 export default function HeroScene() {
+  const { theme } = useTheme();
+  const lightColor = theme === 'dark' ? '#E60045' : '#FFB3C6';
+  const secondaryLightColor = theme === 'dark' ? '#9C1355' : '#A0C4FF';
+
   return (
     <Canvas camera={{ position: [0, 0, 8] }}>
-      <ambientLight intensity={1.5} />
-      <directionalLight position={[10, 10, 10]} intensity={2.5} color="#E60045" />
-      <directionalLight position={[-10, -10, -10]} intensity={1} color="#9C1355" />
+      <ambientLight intensity={theme === 'dark' ? 1.5 : 2.5} />
+      <directionalLight position={[10, 10, 10]} intensity={2.5} color={lightColor} />
+      <directionalLight position={[-10, -10, -10]} intensity={1} color={secondaryLightColor} />
       <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1}>
         <AbstractRose />
       </Float>

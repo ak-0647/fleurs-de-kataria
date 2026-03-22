@@ -18,7 +18,7 @@ export default function CustomRequest() {
   const [loading, setLoading] = useState(false);
 
   if (!user) {
-    return <div style={{ paddingTop: '150px', textAlign: 'center', color: '#FFF' }}>Please <a href="/login" style={{color: '#E60045'}}>login</a> to make a custom request.</div>;
+    return <div style={{ paddingTop: '150px', textAlign: 'center', color: 'var(--text-main)' }}>Please <a href="/login" style={{color: 'var(--primary)'}}>login</a> to make a custom request.</div>;
   }
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -64,23 +64,25 @@ export default function CustomRequest() {
 
   return (
     <div style={{ paddingTop: '120px', minHeight: '100vh', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: '4rem' }}>
-      <form onSubmit={handleSubmit} className="form-container" style={{ width: '90%', maxWidth: '700px', background: 'rgba(15, 5, 10, 0.7)' }}>
-        <h2 style={{ color: '#FBE29F', fontFamily: 'Cinzel, serif', textAlign: 'center', margin: '0 0 1rem 0', fontSize: '2.5rem' }}>Make Your Own</h2>
-        <p style={{ textAlign: 'center', color: '#A19BAA', marginBottom: '3rem', fontSize: '1.1rem', fontWeight: 300 }}>
+      <form onSubmit={handleSubmit} className="form-container" style={{ width: '90%', maxWidth: '700px', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+        <h2 style={{ color: 'var(--accent)', fontFamily: 'Cinzel, serif', textAlign: 'center', margin: '0 0 1rem 0', fontSize: '2.5rem' }}>Make Your Own</h2>
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '3rem', fontSize: '1.1rem', fontWeight: 300 }}>
           Design the bouquet of your dreams. Our artisans will bring it to life.
         </p>
 
         <div className="input-group">
-          <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Flower Selection (Required) *</label>
+          <label style={{ color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Flower Selection (Required) *</label>
           <textarea 
             name="flower_selection" value={formData.flower_selection} onChange={handleChange}
             required rows="3" placeholder="e.g. 12 Red Roses, 5 White Lilies..."
-            style={{ width: '100%', padding: '1rem', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '4px', resize: 'vertical', fontFamily: 'Outfit, sans-serif' }}
+            style={{ width: '100%', padding: '1rem 0.5rem', background: 'transparent', border: 'none', borderBottom: '2px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '0', resize: 'vertical', fontFamily: 'Outfit, sans-serif', transition: '0.3s' }}
+            onFocus={(e) => { e.target.style.borderBottomColor = 'var(--primary)'; e.target.style.background = 'rgba(230,0,69,0.02)'; }}
+            onBlur={(e) => { e.target.style.borderBottomColor = 'var(--glass-border)'; e.target.style.background = 'transparent'; }}
           ></textarea>
         </div>
 
         <div className="input-group">
-          <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Wrapping Style (Required) *</label>
+          <label style={{ color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Wrapping Style (Required) *</label>
           <select name="wrapping_style" value={formData.wrapping_style} onChange={handleChange} required className="filter-select">
             <option value="">Select a Wrapping Style</option>
             <option value="Classic Paper">Classic Paper</option>
@@ -92,7 +94,7 @@ export default function CustomRequest() {
         </div>
 
         <div className="input-group">
-          <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Ribbon Color</label>
+          <label style={{ color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Ribbon Color</label>
           <input 
             type="text" name="ribbon_color" value={formData.ribbon_color} onChange={handleChange}
             placeholder="e.g. Crimson Red, Gold, Ivory..."
@@ -101,7 +103,7 @@ export default function CustomRequest() {
         </div>
 
         <div className="input-group">
-          <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Approximate Budget (₹)</label>
+          <label style={{ color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Approximate Budget (₹)</label>
           <input 
             type="text" name="budget" value={formData.budget} onChange={handleChange}
             placeholder="e.g. 5000"
@@ -110,11 +112,13 @@ export default function CustomRequest() {
         </div>
 
         <div className="input-group">
-          <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Handwritten Note</label>
+          <label style={{ color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Handwritten Note</label>
           <textarea 
             name="note" value={formData.note} onChange={handleChange}
             rows="2" placeholder="Message to be included with the bouquet..."
-            style={{ width: '100%', padding: '1rem', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '4px', resize: 'vertical', fontFamily: 'Outfit, sans-serif' }}
+            style={{ width: '100%', padding: '1rem 0.5rem', background: 'transparent', border: 'none', borderBottom: '2px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '0', resize: 'vertical', fontFamily: 'Outfit, sans-serif', transition: '0.3s' }}
+            onFocus={(e) => { e.target.style.borderBottomColor = 'var(--primary)'; e.target.style.background = 'rgba(230,0,69,0.02)'; }}
+            onBlur={(e) => { e.target.style.borderBottomColor = 'var(--glass-border)'; e.target.style.background = 'transparent'; }}
           ></textarea>
         </div>
 
@@ -122,7 +126,7 @@ export default function CustomRequest() {
           <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Reference Image or Video (Optional)</label>
           <input 
             type="file" accept="image/*,video/*" onChange={handleFileChange}
-            style={{ padding: '1rem 0', color: '#FFF' }}
+            style={{ padding: '1rem 0', color: 'var(--text-main)' }}
           />
         </div>
         

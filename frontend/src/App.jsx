@@ -2,6 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { CartProvider, CartContext } from './context/CartContext';
+import { ThemeProvider, useTheme } from './context/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 import Home from './pages/Home';
 import About from './pages/About';
 import Collection from './pages/Collection';
@@ -30,9 +32,9 @@ const Navbar = () => {
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <nav className="navbar" style={{ backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(251, 226, 159, 0.1)' }}>
+    <nav className="navbar">
       <div className="nav-container">
-        <Link to="/" className="logo" style={{ fontFamily: 'Cinzel, serif', letterSpacing: '4px', color: '#FBE29F', textTransform: 'uppercase' }}>
+        <Link to="/" className="logo">
           Fleurs de Kataria
         </Link>
         <ul className="nav-links">
@@ -47,6 +49,7 @@ const Navbar = () => {
           )}
         </ul>
         <div className="nav-actions">
+          <ThemeToggle />
           <Link to="/cart" className="nav-link" style={{ position: 'relative', fontSize: '1.2rem' }}>
              <FaShoppingBag />
              {totalItems > 0 && <span className="badge">{totalItems}</span>}
@@ -72,37 +75,39 @@ const Navbar = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <PetalBackground />
-        <Router>
-          <Toaster position="top-center" />
-          <div className="app-wrapper">
-            <Navbar />
-            <main className="content">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/collection" element={<Collection />} />
-                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/verify-otp" element={<VerifyOTP />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
-                <Route path="/custom-request" element={<CustomRequest />} />
-                <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
-                <Route path="/admin/orders/:id" element={<ProtectedRoute adminOnly={true}><OrderDetail /></ProtectedRoute>} />
-              </Routes>
-            </main>
-            <Footer />
-          </div>
-        </Router>
-      </CartProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <CartProvider>
+          <PetalBackground />
+          <Router>
+            <Toaster position="top-center" />
+            <div className="app-wrapper">
+              <Navbar />
+              <main className="content">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/collection" element={<Collection />} />
+                  <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/verify-otp" element={<VerifyOTP />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+                  <Route path="/custom-request" element={<CustomRequest />} />
+                  <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
+                  <Route path="/admin/orders/:id" element={<ProtectedRoute adminOnly={true}><OrderDetail /></ProtectedRoute>} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </CartProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

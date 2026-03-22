@@ -122,7 +122,7 @@ export default function Register() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: radial-gradient(ellipse at 20% 50%, #1a0010 0%, #050308 60%);
+          background: radial-gradient(ellipse at 20% 50%, var(--bg-deep) 0%, var(--bg-dark) 60%);
           padding: 2rem;
           position: relative;
           overflow: hidden;
@@ -149,12 +149,12 @@ export default function Register() {
           display: flex;
           width: 100%;
           max-width: 900px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass);
+          border: 1px solid var(--glass-border);
           border-radius: 24px;
           overflow: hidden;
           backdrop-filter: blur(20px);
-          box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+          box-shadow: 0 32px 80px rgba(0,0,0,0.1), 0 0 0 1px var(--glass-border);
           animation: regFadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
 
@@ -167,8 +167,8 @@ export default function Register() {
         .reg-accent-strip {
           width: 260px;
           flex-shrink: 0;
-          background: linear-gradient(160deg, #2a001a 0%, #140010 50%, #0D050A 100%);
-          border-right: 1px solid rgba(230,0,69,0.12);
+          background: var(--dropdown-bg);
+          border-right: 1px solid var(--glass-border);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -190,13 +190,13 @@ export default function Register() {
         .reg-brand-name {
           font-family: 'Cinzel', serif;
           font-size: 1rem;
-          color: #FBE29F;
+          color: var(--accent);
           letter-spacing: 2px;
           text-align: center;
         }
         .reg-brand-tagline {
           font-size: 0.75rem;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           letter-spacing: 3px;
           text-transform: uppercase;
           text-align: center;
@@ -215,7 +215,7 @@ export default function Register() {
           display: flex;
           align-items: center;
           gap: 0.8rem;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           font-size: 0.82rem;
           width: 100%;
         }
@@ -225,7 +225,7 @@ export default function Register() {
         .reg-step-dot {
           width: 26px; height: 26px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #E60045, #9C1355);
+          background: linear-gradient(135deg, var(--primary), #9C1355);
           display: flex; align-items: center; justify-content: center;
           font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
           box-shadow: 0 2px 10px rgba(230,0,69,0.4);
@@ -233,7 +233,7 @@ export default function Register() {
         .reg-step-dot-muted {
           background: rgba(255,255,255,0.08) !important;
           box-shadow: none !important;
-          color: rgba(255,255,255,0.3);
+          color: var(--text-muted) !important;
         }
         .reg-step-line {
           width: 1px; height: 24px;
@@ -254,11 +254,11 @@ export default function Register() {
         .reg-title {
           font-family: 'Cinzel', serif;
           font-size: 1.8rem;
-          color: #FFF;
+          color: var(--text-main);
           margin-bottom: 0.3rem;
         }
         .reg-subtitle {
-          color: rgba(255,255,255,0.4);
+          color: var(--text-muted);
           font-size: 0.9rem;
         }
 
@@ -282,24 +282,24 @@ export default function Register() {
 
         .reg-label {
           font-size: 0.78rem;
-          color: rgba(255,255,255,0.5);
+          color: var(--text-muted);
           letter-spacing: 0.5px;
           text-transform: uppercase;
         }
 
         .reg-input, .reg-select {
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: var(--glass);
+          border: 1px solid var(--glass-border);
           border-radius: 10px;
           padding: 0.8rem 1rem;
-          color: #FFF;
+          color: var(--text-main);
           font-family: 'Outfit', sans-serif;
           font-size: 0.9rem;
           outline: none;
           transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
           width: 100%;
         }
-        .reg-input::placeholder { color: rgba(255,255,255,0.2); }
+        .reg-input::placeholder { color: var(--text-muted); }
         .reg-input:focus, .reg-select:focus {
           border-color: rgba(230,0,69,0.5);
           background: rgba(255,255,255,0.07);
@@ -307,7 +307,7 @@ export default function Register() {
         }
         .reg-select option {
           background: #1a0010;
-          color: #FFF;
+          color: var(--text-main);
         }
 
         .reg-submit-btn {
@@ -316,7 +316,7 @@ export default function Register() {
           padding: 0.9rem;
           border: none;
           border-radius: 10px;
-          background: linear-gradient(135deg, #E60045, #9C1355);
+          background: linear-gradient(135deg, var(--primary), #9C1355);
           color: #FFF;
           font-family: 'Outfit', sans-serif;
           font-size: 0.95rem;
@@ -345,11 +345,11 @@ export default function Register() {
 
         .reg-login-text {
           text-align: center;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           font-size: 0.87rem;
         }
         .reg-login-link {
-          color: #E60045;
+          color: var(--primary);
           text-decoration: none;
           font-weight: 600;
           transition: color 0.2s;

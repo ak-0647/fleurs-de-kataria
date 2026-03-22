@@ -211,24 +211,24 @@ export default function About() {
           font-size: 0.78rem;
           letter-spacing: 4px;
           text-transform: uppercase;
-          color: #E60045;
+          color: var(--primary);
           margin-bottom: 1.2rem;
         }
         .about-hero-title {
           font-family: 'Cinzel', serif;
           font-size: clamp(2.5rem, 5vw, 4.2rem);
           line-height: 1.15;
-          color: #FFF;
+          color: var(--text-main);
           margin-bottom: 1.5rem;
         }
         .about-hero-accent {
-          background: linear-gradient(135deg, #E60045, #FBE29F);
+          background: linear-gradient(135deg, var(--primary), var(--accent));
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
         .about-hero-subtitle {
-          color: rgba(255,255,255,0.55);
+          color: var(--text-muted);
           font-size: 1.05rem;
           line-height: 1.8;
           max-width: 480px;
@@ -238,8 +238,8 @@ export default function About() {
           display: inline-flex;
           align-items: center;
           gap: 0.6rem;
-          background: linear-gradient(135deg, #E60045, #9C1355);
-          color: #FFF;
+          background: linear-gradient(135deg, var(--primary), #9C1355);
+          color: var(--text-main);
           text-decoration: none;
           padding: 0.9rem 2rem;
           border-radius: 50px;
@@ -295,14 +295,14 @@ export default function About() {
         .about-stat-value {
           font-family: 'Cinzel', serif;
           font-size: 2.5rem;
-          color: #FBE29F;
+          color: var(--accent);
           line-height: 1;
         }
         .about-stat-label {
           font-size: 0.78rem;
           letter-spacing: 2px;
           text-transform: uppercase;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-muted);
         }
 
         /* ── Mission ── */
@@ -333,7 +333,7 @@ export default function About() {
         }
         .about-mission-text { flex: 1; }
         .about-mission-body {
-          color: rgba(255,255,255,0.55);
+          color: var(--text-muted);
           font-size: 0.97rem;
           line-height: 1.9;
           margin-bottom: 1.2rem;
@@ -342,7 +342,7 @@ export default function About() {
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          color: #E60045;
+          color: var(--primary);
           text-decoration: none;
           font-size: 0.88rem;
           font-weight: 600;
@@ -357,13 +357,13 @@ export default function About() {
           font-size: 0.75rem;
           letter-spacing: 4px;
           text-transform: uppercase;
-          color: #E60045;
+          color: var(--primary);
           margin-bottom: 0.8rem;
         }
         .about-section-title {
           font-family: 'Cinzel', serif;
           font-size: clamp(1.8rem, 3vw, 2.8rem);
-          color: #FFF;
+          color: var(--text-main);
           line-height: 1.2;
           margin-bottom: 1rem;
         }
@@ -371,7 +371,7 @@ export default function About() {
         /* ── Values ── */
         .about-values {
           padding: 6rem 8vw;
-          background: rgba(255,255,255,0.01);
+          background: var(--glass);
         }
         .about-values-header { text-align: center; margin-bottom: 4rem; }
         .about-values-grid {
@@ -382,8 +382,8 @@ export default function About() {
           margin: 0 auto;
         }
         .about-value-card {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
+          background: var(--glass);
+          border: 1px solid var(--glass-border);
           border-radius: 20px;
           padding: 2.2rem 1.8rem;
           transition: transform 0.3s, border-color 0.3s;
@@ -403,11 +403,11 @@ export default function About() {
         .about-value-title {
           font-family: 'Cinzel', serif;
           font-size: 1.05rem;
-          color: #FFF;
+          color: var(--text-main);
           margin-bottom: 0.7rem;
         }
         .about-value-desc {
-          color: rgba(255,255,255,0.45);
+          color: var(--text-muted);
           font-size: 0.88rem;
           line-height: 1.8;
         }
@@ -444,12 +444,12 @@ export default function About() {
         .about-team-name {
           font-family: 'Cinzel', serif;
           font-size: 1rem;
-          color: #FFF;
+          color: var(--text-main);
           margin-bottom: 0.4rem;
         }
         .about-team-role {
           font-size: 0.8rem;
-          color: rgba(255,255,255,0.4);
+          color: var(--text-muted);
           letter-spacing: 1px;
           text-transform: uppercase;
         }
@@ -478,8 +478,8 @@ export default function About() {
           flex-wrap: wrap;
         }
         .about-btn-primary {
-          background: linear-gradient(135deg, #E60045, #9C1355);
-          color: #FFF;
+          background: linear-gradient(135deg, var(--primary), #9C1355);
+          color: var(--text-main);
           padding: 0.9rem 2.2rem;
           border-radius: 50px;
           text-decoration: none;
@@ -491,10 +491,10 @@ export default function About() {
         .about-btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(230,0,69,0.5); }
         .about-btn-secondary {
           background: transparent;
-          color: #FFF;
+          color: var(--text-main);
           padding: 0.9rem 2.2rem;
           border-radius: 50px;
-          border: 1px solid rgba(255,255,255,0.2);
+          border: 1px solid var(--glass-border);
           text-decoration: none;
           font-weight: 600;
           font-size: 0.9rem;

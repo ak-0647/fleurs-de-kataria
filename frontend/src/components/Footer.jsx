@@ -21,39 +21,39 @@ export default function Footer() {
   };
 
   return (
-    <footer style={{ background: '#050308', borderTop: '1px solid rgba(251,226,159,0.1)', padding: '5rem 2rem 2rem', marginTop: '5rem' }}>
+    <footer style={{ background: 'var(--bg-dark)', borderTop: '1px solid var(--glass-border)', padding: '5rem 2rem 2rem', marginTop: '5rem' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '3rem' }}>
 
         {/* Brand Section */}
         <div>
-          <h2 style={{ fontFamily: 'Cinzel, serif', color: '#FBE29F', fontSize: '1.8rem', marginBottom: '1.5rem' }}>Fleurs de Kataria</h2>
-          <p style={{ color: '#A19BAA', lineHeight: '1.8', fontSize: '0.9rem' }}>
+          <h2 style={{ fontFamily: 'Cinzel, serif', color: 'var(--accent)', fontSize: '1.8rem', marginBottom: '1.5rem' }}>Fleurs de Kataria</h2>
+          <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '0.9rem' }}>
             Crafting bespoke floral masterpieces that transcend the ordinary. Every petal tells a story of elegance and grace.
           </p>
           <div style={{ display: 'flex', gap: '1.2rem', marginTop: '2rem' }}>
-            <a href="#" style={{ color: '#FBE29F', fontSize: '1.2rem' }}><FaInstagram /></a>
-            <a href="#" style={{ color: '#FBE29F', fontSize: '1.2rem' }}><FaFacebookF /></a>
-            <a href="#" style={{ color: '#FBE29F', fontSize: '1.2rem' }}><FaPinterestP /></a>
+            <a href="#" style={{ color: 'var(--accent)', fontSize: '1.2rem' }}><FaInstagram /></a>
+            <a href="#" style={{ color: 'var(--accent)', fontSize: '1.2rem' }}><FaFacebookF /></a>
+            <a href="#" style={{ color: 'var(--accent)', fontSize: '1.2rem' }}><FaPinterestP /></a>
           </div>
         </div>
 
         {/* Quick Links */}
         <div>
-          <h4 style={{ color: '#FFF', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Curated Journeys</h4>
+          <h4 style={{ color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Curated Journeys</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <li><Link to="/collection" style={{ color: '#A19BAA', textDecoration: 'none', fontSize: '0.9rem' }}>The Collection</Link></li>
-            <li><Link to="/custom-request" style={{ color: '#A19BAA', textDecoration: 'none', fontSize: '0.9rem' }}>Bespoke Creations</Link></li>
-            <li><Link to="/orders" style={{ color: '#A19BAA', textDecoration: 'none', fontSize: '0.9rem' }}>Track Your Story</Link></li>
+            <li><Link to="/collection" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>The Collection</Link></li>
+            <li><Link to="/custom-request" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Bespoke Creations</Link></li>
+            <li><Link to="/orders" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Track Your Story</Link></li>
           </ul>
         </div>
 
         {/* Contact Info */}
         <div>
-          <h4 style={{ color: '#FFF', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Contact Us</h4>
-          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem', color: '#A19BAA', fontSize: '0.9rem' }}>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}><FaMapMarkerAlt color="#E60045" /> YNR, Haryana</li>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}><FaPhoneAlt color="#E60045" /> 9416427080</li>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', wordBreak: 'break-all' }}><FaEnvelope color="#E60045" style={{ flexShrink: 0 }} /> akshitasharma1205@gmail.com</li>
+          <h4 style={{ color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Contact Us</h4>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}><FaMapMarkerAlt color="var(--primary)" /> YNR, Haryana</li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}><FaPhoneAlt color="var(--primary)" /> 9416427080</li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', wordBreak: 'break-all' }}><FaEnvelope color="var(--primary)" style={{ flexShrink: 0 }} /> akshitasharma1205@gmail.com</li>
           </ul>
         </div>
 
@@ -69,9 +69,9 @@ export default function Footer() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <span style={{ fontSize: '1.2rem' }}>🌸</span>
-            <h4 style={{ color: '#FBE29F', fontFamily: 'Cinzel, serif', fontSize: '1rem', margin: 0 }}>Join the Inner Circle</h4>
+            <h4 style={{ color: 'var(--accent)', fontFamily: 'Cinzel, serif', fontSize: '1rem', margin: 0 }}>Join the Inner Circle</h4>
           </div>
-          <p style={{ color: '#A19BAA', fontSize: '0.82rem', lineHeight: '1.6', margin: 0 }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: '1.6', margin: 0 }}>
             Exclusive previews &amp; floral care tips from our master florists.
           </p>
           <form onSubmit={handleNewsletter} style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.4rem' }}>
@@ -86,9 +86,9 @@ export default function Footer() {
                 width: '100%',
                 padding: '0.75rem 1rem',
                 borderRadius: '10px',
-                border: '1px solid rgba(255,255,255,0.1)',
-                background: 'rgba(255,255,255,0.04)',
-                color: '#FFF',
+                border: '1px solid var(--glass-border)',
+                background: 'var(--glass)',
+                color: 'var(--text-main)',
                 fontFamily: 'Outfit, sans-serif',
                 fontSize: '0.88rem',
                 outline: 'none',
@@ -106,7 +106,7 @@ export default function Footer() {
                 border: 'none',
                 background: nlDone
                   ? 'linear-gradient(135deg, #1a7a3a, #145c2c)'
-                  : 'linear-gradient(135deg, #E60045, #9C1355)',
+                  : 'linear-gradient(135deg, var(--primary), #9C1355)',
                 color: '#FFF',
                 fontFamily: 'Outfit, sans-serif',
                 fontWeight: 600,
@@ -128,8 +128,8 @@ export default function Footer() {
         </div>
       </div>
 
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', marginTop: '4rem', padding: '1.5rem 0 0', textAlign: 'center' }}>
-        <p style={{ color: '#555', fontSize: '0.8rem' }}>&copy; {new Date().getFullYear()} Fleurs de Kataria. All Rights Reserved.</p>
+      <div style={{ borderTop: '1px solid var(--glass-border)', marginTop: '4rem', padding: '1.5rem 0 0', textAlign: 'center' }}>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>&copy; {new Date().getFullYear()} Fleurs de Kataria. All Rights Reserved.</p>
       </div>
     </footer>
   );

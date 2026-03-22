@@ -13,7 +13,7 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
 
   if (!user) {
-    return <div style={{ paddingTop: '150px', textAlign: 'center', color: '#FFF' }}>Please login to checkout.</div>;
+    return <div style={{ paddingTop: '150px', textAlign: 'center', color: 'var(--text-main)' }}>Please login to checkout.</div>;
   }
 
   const handleCheckout = async (e) => {
@@ -53,24 +53,26 @@ export default function Checkout() {
 
   return (
     <div style={{ paddingTop: '100px', minHeight: '100vh', background: 'var(--bg-deep)', display: 'flex', justifyContent: 'center', alignItems: 'center', paddingBottom: '4rem' }}>
-      <form onSubmit={handleCheckout} className="form-container" style={{ width: '90%', maxWidth: '600px', background: 'rgba(15, 5, 10, 0.7)' }}>
-        <h2 style={{ color: '#FBE29F', fontFamily: 'Cinzel, serif', textAlign: 'center', margin: '0 0 2rem 0', fontSize: '2rem' }}>Secure Checkout</h2>
+      <form onSubmit={handleCheckout} className="form-container" style={{ width: '90%', maxWidth: '600px', background: 'transparent', border: 'none', boxShadow: 'none' }}>
+        <h2 style={{ color: 'var(--accent)', fontFamily: 'Cinzel, serif', textAlign: 'center', margin: '0 0 2rem 0', fontSize: '2rem' }}>Secure Checkout</h2>
         
-        <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px', border: '1px solid rgba(230,0,69,0.2)' }}>
-          <h3 style={{ color: '#FFF', margin: '0 0 1rem 0', fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>Order Summary</h3>
-          <p style={{ color: '#A19BAA', margin: 0, textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '1px' }}>Total Items: {cartItems.reduce((a,b)=>a+b.quantity,0)}</p>
-          <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '1rem 0' }}></div>
-          <h3 style={{ color: '#E60045', margin: '0', fontSize: '1.5rem' }}>Total: ₹{cartTotal.toFixed(2)}</h3>
+        <div style={{ marginBottom: '2rem', padding: '1.5rem', background: 'var(--glass)', borderRadius: '8px', border: '1px solid var(--glass-border)' }}>
+          <h3 style={{ color: 'var(--text-main)', margin: '0 0 1rem 0', fontFamily: 'Cinzel, serif', letterSpacing: '1px' }}>Order Summary</h3>
+          <p style={{ color: 'var(--text-muted)', margin: 0, textTransform: 'uppercase', fontSize: '0.9rem', letterSpacing: '1px' }}>Total Items: {cartItems.reduce((a,b)=>a+b.quantity,0)}</p>
+          <div style={{ height: '1px', background: 'var(--glass-border)', margin: '1rem 0' }}></div>
+          <h3 style={{ color: 'var(--primary)', margin: '0', fontSize: '1.5rem' }}>Total: ₹{cartTotal.toFixed(2)}</h3>
         </div>
 
         <div className="input-group">
-          <label style={{ color: '#D5D0DB', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Delivery Address</label>
+          <label style={{ color: 'var(--text-muted)', letterSpacing: '1px', textTransform: 'uppercase', fontSize: '0.9rem' }}>Delivery Address</label>
           <textarea 
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             required
             rows="4"
-            style={{ width: '100%', padding: '1rem', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', color: '#FFF', borderRadius: '4px', resize: 'vertical', fontFamily: 'Outfit, sans-serif' }}
+            style={{ width: '100%', padding: '1rem 0.5rem', background: 'transparent', border: 'none', borderBottom: '2px solid var(--glass-border)', color: 'var(--text-main)', borderRadius: '0', resize: 'vertical', fontFamily: 'Outfit, sans-serif', transition: '0.3s' }}
+            onFocus={(e) => { e.target.style.borderBottomColor = 'var(--primary)'; e.target.style.background = 'rgba(230,0,69,0.02)'; }}
+            onBlur={(e) => { e.target.style.borderBottomColor = 'var(--glass-border)'; e.target.style.background = 'transparent'; }}
             placeholder="Enter full delivery address..."
           ></textarea>
         </div>

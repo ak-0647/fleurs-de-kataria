@@ -138,7 +138,7 @@ export default function ForgotPassword() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: radial-gradient(ellipse at 50% 50%, #1a0010 0%, #050308 100%);
+          background: radial-gradient(ellipse at 50% 50%, var(--bg-deep) 0%, var(--bg-dark) 100%);
           padding: 2rem;
           position: relative;
           overflow: hidden;
@@ -161,12 +161,12 @@ export default function ForgotPassword() {
         }
         .login-card {
           width: 100%;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass);
+          border: 1px solid var(--glass-border);
           border-radius: 24px;
           overflow: hidden;
           backdrop-filter: blur(20px);
-          box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+          box-shadow: 0 32px 80px rgba(0,0,0,0.1), 0 0 0 1px var(--glass-border);
           animation: fadeUp 0.6s ease-out;
         }
         @keyframes fadeUp {
@@ -174,22 +174,22 @@ export default function ForgotPassword() {
           to { opacity: 1; transform: translateY(0); }
         }
         .login-form-area { flex: 1; display: flex; flex-direction: column; gap: 1rem; }
-        .login-title { font-family: 'Cinzel', serif; color: #FFF; }
-        .login-subtitle { color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-top: 0.3rem;}
+        .login-title { font-family: 'Cinzel', serif; color: var(--text-main); }
+        .login-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.3rem;}
         .login-form { display: flex; flex-direction: column; gap: 1.2rem; }
         .login-field { display: flex; flex-direction: column; gap: 0.5rem; }
-        .login-label { font-size: 0.75rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+        .login-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         .login-input {
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: var(--glass);
+          border: 1px solid var(--glass-border);
           border-radius: 12px;
           padding: 0.9rem 1rem;
-          color: #FFF;
+          color: var(--text-main);
           font-family: 'Outfit', sans-serif;
           outline: none;
           transition: all 0.3s;
         }
-        .login-input:focus { border-color: #E60045; background: rgba(255,255,255,0.08); }
+        .login-input:focus { border-color: var(--primary); background: rgba(230,0,69,0.02); }
         .login-submit-btn {
           padding: 1rem;
           border: none;

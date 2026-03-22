@@ -27,7 +27,7 @@ export default function Home() {
         <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
           <HeroScene />
         </div>
-        <div style={{ position: 'relative', zIndex: 1, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', background: 'radial-gradient(circle, rgba(13,5,10,0.3) 0%, rgba(5,3,8,0.8) 100%)' }}>
+        <div className="hero-overlay" style={{ position: 'relative', zIndex: 1, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <h1 ref={titleRef} style={{ fontSize: 'clamp(3rem, 10vw, 7rem)', margin: 0, opacity: 0, transform: 'translateY(50px)', textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>Fleurs de Kataria</h1>
           <p ref={subtitleRef} style={{ fontSize: '1.2rem', letterSpacing: '8px', textTransform: 'uppercase', color: 'var(--accent)', opacity: 0, transform: 'translateY(30px)', marginTop: '1rem' }}>The Art of Eternal Bloom</p>
           <div style={{ marginTop: '3rem' }}>
@@ -43,9 +43,9 @@ export default function Home() {
           {CATEGORIES.map((cat, idx) => (
             <div key={idx} className="glass-card" style={{ padding: 0, overflow: 'hidden', position: 'relative', height: '500px' }}>
               <img src={cat.image} alt={cat.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: '0.6s transform' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.9), transparent)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '2.5rem' }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'var(--card-overlay)', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '2.5rem' }}>
                 <div style={{ color: 'var(--accent)', fontSize: '2rem', marginBottom: '1rem' }}>{cat.icon}</div>
-                <h3 style={{ fontSize: '1.8rem', color: '#FFF', marginBottom: '1rem' }}>{cat.title}</h3>
+                <h3 style={{ fontSize: '1.8rem', color: 'var(--text-main)', marginBottom: '1rem' }}>{cat.title}</h3>
                 <Link to={`/collection?category=${cat.title}`} style={{ color: 'var(--accent)', textDecoration: 'none', fontSize: '0.9rem', letterSpacing: '2px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   VIEW ATELIER <FaArrowRight fontSize="0.7rem" />
                 </Link>
@@ -62,11 +62,11 @@ export default function Home() {
           <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', marginBottom: '3rem', lineHeight: '1.8' }}>
             Invitation-only access to our seasonal collections, limited edition releases, <br/> and the art of fine floral orchestration.
           </p>
-          <div style={{ display: 'flex', maxWidth: '500px', margin: '0 auto', gap: '0', background: 'rgba(255,255,255,0.03)', padding: '5px', borderRadius: '50px', border: '1px solid var(--glass-border)' }}>
+          <div style={{ display: 'flex', maxWidth: '500px', margin: '0 auto', gap: '0', background: 'var(--newsletter-bg)', padding: '5px', borderRadius: '50px', border: '1px solid var(--glass-border)' }}>
             <input 
               type="email" 
               placeholder="Enter your email address" 
-              style={{ flex: 1, background: 'transparent', border: 'none', color: '#FFF', padding: '0 2rem', outline: 'none', fontSize: '0.9rem' }}
+              style={{ flex: 1, background: 'transparent', border: 'none', color: 'var(--text-main)', padding: '0 2rem', outline: 'none', fontSize: '0.9rem' }}
             />
             <button className="btn">Subscribe</button>
           </div>

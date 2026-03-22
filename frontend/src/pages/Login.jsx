@@ -125,7 +125,7 @@ export default function Login() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: radial-gradient(ellipse at 20% 50%, #1a0010 0%, #050308 60%);
+          background: radial-gradient(ellipse at 20% 50%, var(--bg-deep) 0%, var(--bg-dark) 60%);
           padding: 2rem;
           position: relative;
           overflow: hidden;
@@ -152,12 +152,12 @@ export default function Login() {
           display: flex;
           width: 100%;
           max-width: 820px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass);
+          border: 1px solid var(--glass-border);
           border-radius: 24px;
           overflow: hidden;
           backdrop-filter: blur(20px);
-          box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+          box-shadow: 0 32px 80px rgba(0,0,0,0.1), 0 0 0 1px var(--glass-border);
           animation: loginFadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
         }
 
@@ -170,8 +170,8 @@ export default function Login() {
         .login-accent-strip {
           width: 280px;
           flex-shrink: 0;
-          background: linear-gradient(160deg, #2a001a 0%, #140010 50%, #0D050A 100%);
-          border-right: 1px solid rgba(230,0,69,0.12);
+          background: var(--dropdown-bg);
+          border-right: 1px solid var(--glass-border);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -201,13 +201,13 @@ export default function Login() {
         .login-brand-name {
           font-family: 'Cinzel', serif;
           font-size: 1rem;
-          color: #FBE29F;
+          color: var(--accent);
           letter-spacing: 2px;
           text-align: center;
         }
         .login-brand-tagline {
           font-size: 0.75rem;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           letter-spacing: 3px;
           text-transform: uppercase;
           text-align: center;
@@ -227,11 +227,11 @@ export default function Login() {
         .login-title {
           font-family: 'Cinzel', serif;
           font-size: 1.8rem;
-          color: #FFF;
+          color: var(--text-main);
           margin-bottom: 0.3rem;
         }
         .login-subtitle {
-          color: rgba(255,255,255,0.4);
+          color: var(--text-muted);
           font-size: 0.9rem;
         }
 
@@ -240,7 +240,7 @@ export default function Login() {
           display: flex;
           gap: 0.6rem;
           background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.07);
+          border: 1px solid var(--glass-border);
           border-radius: 12px;
           padding: 6px;
         }
@@ -250,7 +250,7 @@ export default function Login() {
           border-radius: 8px;
           border: 1px solid transparent;
           background: transparent;
-          color: rgba(255,255,255,0.45);
+          color: var(--text-muted);
           font-family: 'Outfit', sans-serif;
           font-size: 0.85rem;
           font-weight: 500;
@@ -262,18 +262,18 @@ export default function Login() {
           gap: 0.4rem;
         }
         .role-btn:hover {
-          color: #FFF;
-          background: rgba(255,255,255,0.06);
+          color: var(--text-main);
+          background: rgba(0,0,0,0.05);
         }
         .role-btn-active {
-          background: linear-gradient(135deg, #E60045, #9C1355) !important;
-          color: #FFF !important;
+          background: linear-gradient(135deg, var(--primary), #9C1355) !important;
+          color: var(--text-main) !important;
           border-color: transparent !important;
           box-shadow: 0 4px 16px rgba(230,0,69,0.35);
         }
         .role-btn-active-admin {
           background: linear-gradient(135deg, #6d1b7b, #9C1355) !important;
-          color: #FFF !important;
+          color: var(--text-main) !important;
           border-color: transparent !important;
           box-shadow: 0 4px 16px rgba(156,19,85,0.35);
         }
@@ -297,7 +297,7 @@ export default function Login() {
         }
         .login-label {
           font-size: 0.8rem;
-          color: rgba(255,255,255,0.55);
+          color: var(--text-muted);
           letter-spacing: 0.5px;
           text-transform: uppercase;
         }
@@ -307,21 +307,21 @@ export default function Login() {
           text-decoration: none;
           transition: color 0.2s;
         }
-        .login-forgot:hover { color: #E60045; }
+        .login-forgot:hover { color: var(--primary); }
 
         .login-input {
-          background: rgba(255,255,255,0.04);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(0,0,0,0.05);
+          border: 1px solid var(--glass-border);
           border-radius: 10px;
           padding: 0.85rem 1rem;
-          color: #FFF;
+          color: var(--text-main);
           font-family: 'Outfit', sans-serif;
           font-size: 0.95rem;
           outline: none;
           transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
           width: 100%;
         }
-        .login-input::placeholder { color: rgba(255,255,255,0.2); }
+        .login-input::placeholder { color: var(--text-muted); }
         .login-input:focus {
           border-color: rgba(230,0,69,0.5);
           background: rgba(255,255,255,0.07);
@@ -335,7 +335,7 @@ export default function Login() {
           padding: 0.9rem;
           border: none;
           border-radius: 10px;
-          background: linear-gradient(135deg, #E60045, #9C1355);
+          background: linear-gradient(135deg, var(--primary), #9C1355);
           color: #FFF;
           font-family: 'Outfit', sans-serif;
           font-size: 0.95rem;
@@ -365,11 +365,11 @@ export default function Login() {
         /* Register link */
         .login-register-text {
           text-align: center;
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           font-size: 0.87rem;
         }
         .login-register-link {
-          color: #E60045;
+          color: var(--primary);
           text-decoration: none;
           font-weight: 600;
           transition: color 0.2s;

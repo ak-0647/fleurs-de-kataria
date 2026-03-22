@@ -112,7 +112,7 @@ export default function VerifyOTP() {
           display: flex;
           align-items: center;
           justify-content: center;
-          background: radial-gradient(ellipse at 20% 50%, #1a0010 0%, #050308 60%);
+          background: radial-gradient(ellipse at 20% 50%, var(--bg-deep) 0%, var(--bg-dark) 60%);
           padding: 2rem;
           position: relative;
           overflow: hidden;
@@ -138,12 +138,12 @@ export default function VerifyOTP() {
         .otp-card {
           width: 100%;
           max-width: 420px;
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.07);
+          background: var(--glass);
+          border: 1px solid var(--glass-border);
           border-radius: 24px;
           padding: 3rem 2.5rem;
           backdrop-filter: blur(20px);
-          box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+          box-shadow: 0 32px 80px rgba(0,0,0,0.1), 0 0 0 1px var(--glass-border);
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -173,11 +173,11 @@ export default function VerifyOTP() {
         .otp-title {
           font-family: 'Cinzel', serif;
           font-size: 1.7rem;
-          color: #FFF;
+          color: var(--text-main);
           margin: 0;
         }
         .otp-subtitle {
-          color: rgba(255,255,255,0.4);
+          color: var(--text-muted);
           font-size: 0.88rem;
           margin: 0;
         }
@@ -197,9 +197,9 @@ export default function VerifyOTP() {
         .otp-box {
           width: 48px; height: 56px;
           border-radius: 12px;
-          border: 1.5px solid rgba(255,255,255,0.12);
-          background: rgba(255,255,255,0.04);
-          color: #FFF;
+          border: 1.5px solid var(--glass-border);
+          background: var(--glass);
+          color: var(--text-main);
           font-size: 1.4rem;
           font-weight: 700;
           text-align: center;
@@ -209,9 +209,9 @@ export default function VerifyOTP() {
           font-family: 'Outfit', monospace;
         }
         .otp-box:focus {
-          border-color: rgba(230,0,69,0.6);
-          background: rgba(255,255,255,0.07);
-          box-shadow: 0 0 0 3px rgba(230,0,69,0.12);
+          border-color: var(--primary);
+          background: rgba(230,0,69,0.02);
+          box-shadow: 0 0 0 3px rgba(230,0,69,0.1);
         }
         .otp-box-filled {
           border-color: rgba(230,0,69,0.4);
@@ -250,7 +250,7 @@ export default function VerifyOTP() {
         }
 
         .otp-back {
-          color: rgba(255,255,255,0.35);
+          color: var(--text-muted);
           font-size: 0.85rem;
           margin-top: 0.5rem;
         }
