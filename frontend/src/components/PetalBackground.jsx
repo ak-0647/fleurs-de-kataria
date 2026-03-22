@@ -5,18 +5,14 @@ import { useTheme } from '../context/ThemeContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Multiple petal shapes for variety
+// Authentic petal shapes (no circles or blobs)
 const PETAL_PATHS = [
   // Classic rose petal
   "M50 0 C70 30 90 70 50 100 C10 70 30 30 50 0",
-  // Round petal
-  "M50 5 C80 5 95 30 95 50 C95 75 75 95 50 95 C25 95 5 75 5 50 C5 25 20 5 50 5",
-  // Elongated petal
-  "M50 0 C65 20 75 60 50 100 C25 60 35 20 50 0",
-  // Wide petal
-  "M50 10 C90 10 100 40 80 70 C65 90 35 90 20 70 C0 40 10 10 50 10",
-  // Teardrop petal
-  "M50 0 C80 20 85 60 70 85 C60 100 40 100 30 85 C15 60 20 20 50 0",
+  // Slightly asymmetric
+  "M50 0 C80 40 85 70 50 100 C15 70 20 40 50 0",
+  // Slimmer elegant petal
+  "M50 0 C65 30 80 70 50 100 C20 70 35 30 50 0",
 ];
 
 const PETAL_SIZES = [12, 16, 20, 24, 14, 18, 22];
@@ -38,45 +34,50 @@ const Petal = ({ index }) => {
     const petal = petalRef.current;
     if (!petal) return;
 
-    const startDelay = (index / 55) * 20; // Stagger start times
+    // Pre-scatter petals across the entire viewport initially so there is NO DELAY
+    gsap.set(petal, {
+      x: Math.random() * window.innerWidth,
+      y: (Math.random() * window.innerHeight * 1.5) - 100, // Distribute them from top to below screen
+      rotation: Math.random() * 360,
+      scale: 0.3 + Math.random() * 1.1,
+      opacity: theme === 'light' ? (0.3 + Math.random() * 0.45) : (0.12 + Math.random() * 0.3),
+    });
 
-    const reset = () => {
-      gsap.set(petal, {
-        x: Math.random() * window.innerWidth,
-        y: -80,
-        rotation: Math.random() * 360,
-        scale: 0.3 + Math.random() * 1.1,
-        opacity: 0,
-      });
+    const animatePetal = () => {
+      const currentY = gsap.getProperty(petal, "y");
+      const targetY = window.innerHeight + 120;
+      
+      // Calculate remaining distance and adjust duration so speed is consistent
+      const remainingDistance = targetY - currentY;
+      const baseDuration = 12 + Math.random() * 18;
+      const duration = Math.max((remainingDistance / window.innerHeight) * baseDuration, 2);
 
       gsap.to(petal, {
-        opacity: theme === 'light' ? (0.3 + Math.random() * 0.45) : (0.12 + Math.random() * 0.3),
-        duration: 1.5,
-        ease: 'power2.out',
-      });
-
-      gsap.to(petal, {
-        y: window.innerHeight + 120,
-        x: `+=${(Math.random() - 0.5) * 350}`,
-        rotation: `+=${(Math.random() - 0.5) * 900}`,
-        duration: 12 + Math.random() * 18,
-        delay: startDelay,
+        y: targetY,
+        x: `+=${(Math.random() - 0.5) * 200}`,
+        rotation: `+=${(Math.random() - 0.5) * 400}`,
+        duration: duration,
         ease: 'none',
-        onComplete: reset,
-      });
-
-      // Gentle sway
-      gsap.to(petal, {
-        x: `+=${(Math.random() - 0.5) * 80}`,
-        duration: 2 + Math.random() * 4,
-        repeat: -1,
-        yoyo: true,
-        ease: 'sine.inOut',
-        delay: startDelay,
+        onComplete: () => {
+          gsap.set(petal, { 
+            y: -100 - (Math.random() * 200), // Reset above screen
+            x: Math.random() * window.innerWidth 
+          });
+          animatePetal(); // Loop
+        }
       });
     };
 
-    reset();
+    animatePetal();
+
+    // Gentle sway
+    gsap.to(petal, {
+      x: `+=${(Math.random() - 0.5) * 80}`,
+      duration: 2 + Math.random() * 4,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
 
     // Cinematic scroll drift
     const driftIntensity = (index % 6 + 1) * 45;
@@ -95,7 +96,7 @@ const Petal = ({ index }) => {
     return () => {
       gsap.killTweensOf(petal);
     };
-  }, [index, theme]);
+  }, [theme, index]); // Re-run if theme changes to update opacity immediately
 
   return (
     <div
@@ -105,7 +106,7 @@ const Petal = ({ index }) => {
         top: 0,
         left: 0,
         pointerEvents: 'none',
-        zIndex: 0,
+        zIndex: 1, // Ensure they are above opaque page backgrounds
         width: `${size}px`,
         height: `${size}px`,
       }}
@@ -131,7 +132,7 @@ export default function PetalBackground() {
   const petals = Array.from({ length: 120 }); // Ultra rich density
 
   return (
-    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>
+    <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 10, overflow: 'hidden' }}>
       {petals.map((_, i) => (
         <Petal key={i} index={i} />
       ))}
