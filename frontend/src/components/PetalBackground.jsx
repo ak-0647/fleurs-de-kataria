@@ -128,7 +128,7 @@ const Petal = ({ index }) => {
 };
 
 export default function PetalBackground() {
-  const petals = Array.from({ length: 55 }); // Rich density
+  const petals = Array.from({ length: 120 }); // Ultra rich density
 
   return (
     <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, overflow: 'hidden' }}>

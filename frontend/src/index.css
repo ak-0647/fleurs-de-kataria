@@ -53,15 +53,15 @@ html[data-theme='light'] {
 /* Light mode global overrides */
 [data-theme='light'] body,
 html[data-theme='light'] body {
-  background: linear-gradient(160deg, #FAF3F0 0%, #FFF5F7 50%, #FDF0F4 100%);
+  background: linear-gradient(145deg, #FAF3F0 0%, #FFF5F7 35%, #FDF0F4 70%, #F5EAE0 100%);
   background-attachment: fixed;
 }
 
 [data-theme='light'] .glass-card,
 html[data-theme='light'] .glass-card {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(201, 49, 95, 0.15);
-  box-shadow: 0 8px 32px rgba(201, 49, 95, 0.08), 0 2px 8px rgba(0,0,0,0.04);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(201, 169, 110, 0.25); /* Subtle gold border */
+  box-shadow: 0 10px 40px rgba(201, 49, 95, 0.05), 0 4px 12px rgba(201, 169, 110, 0.08); /* Gold/Rose shadow blend */
 }
 
 [data-theme='light'] .glass-card:hover,
@@ -91,8 +91,8 @@ html[data-theme='light'] .btn:hover {
 
 [data-theme='light'] .logo,
 html[data-theme='light'] .logo {
-  color: var(--accent);
-  text-shadow: 0 2px 12px rgba(160, 36, 62, 0.2);
+  color: #B8860B; /* Rich gold tone */
+  text-shadow: 0 2px 12px rgba(184, 134, 11, 0.25);
 }
 
 /* Dark mode explicit overlays */
