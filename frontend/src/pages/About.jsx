@@ -3,9 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaLeaf, FaGem, FaHeart, FaArrowRight, FaStar, FaInstagram } from 'react-icons/fa';
 
 const STATS = [
-  { value: '500+', label: 'Bespoke Creations' },
   { value: '98%', label: 'Happy Clients' },
-  { value: '5+', label: 'Years of Artistry' },
   { value: '24H', label: 'Same Day Delivery' },
 ];
 
@@ -13,27 +11,27 @@ const VALUES = [
   {
     icon: <FaLeaf />, color: '#4caf82',
     title: 'Farm Fresh',
-    desc: 'Every bloom is hand-selected at peak freshness, sourced directly from sustainable farms to ensure unrivalled quality.',
+    desc: 'Every flower is carefully chosen at its freshest, sourced from good farms so you always get the best quality.',
   },
   {
     icon: <FaGem />, color: '#FBE29F',
-    title: 'Master Craftsmanship',
-    desc: 'Our florists are trained artisans who blend classical technique with modern design to create truly one-of-a-kind arrangements.',
+    title: 'Skilled Florists',
+    desc: 'Our florists are skilled and trained. They mix traditional and modern styles to create unique, beautiful arrangements.',
   },
   {
     icon: <FaHeart />, color: '#E60045',
     title: 'Made With Love',
-    desc: 'Each bouquet carries a story — carefully curated, hand-tied, and delivered with warmth and personal attention.',
+    desc: 'Each bouquet is made with care — hand-tied and delivered with warmth and personal attention.',
   },
   {
     icon: <FaStar />, color: '#a78bfa',
-    title: 'Luxury Packaging',
-    desc: 'Presented in our signature velvet boxes and wrapped with silk ribbons — because the unboxing is part of the magic.',
+    title: 'Beautiful Packaging',
+    desc: 'Your flowers come in a nice velvet box with a silk ribbon — because opening the box should feel special too.',
   },
 ];
 
 const TEAM = [
-  { name: 'Akshita Sharma', role: 'Founder & Head Florist', emoji: '🌸' },
+  { name: 'Diljot Kaur Kataria', role: 'Founder & Head Florist', emoji: '🌸' },
   { name: 'Studio Team', role: 'Creative Directors', emoji: '🎨' },
   { name: 'Delivery Partners', role: 'Courier Specialists', emoji: '🚚' },
 ];
@@ -60,15 +58,15 @@ export default function About() {
         <div className="about-hero-content">
           <p className="about-hero-eyebrow">Our Story</p>
           <h1 className="about-hero-title">
-            Where Every Petal<br />
-            <span className="about-hero-accent">Tells a Story</span>
+            Every Flower<br />
+            <span className="about-hero-accent">Has a Story</span>
           </h1>
           <p className="about-hero-subtitle">
             Born from a deep love of nature and beauty, Fleurs de Kataria is YNR's
-            premier luxury floral atelier — crafting emotions into blooms since 2019.
+            favourite flower studio — making feelings into beautiful bouquets.
           </p>
           <Link to="/collection" className="about-hero-cta">
-            Explore Collection <FaArrowRight />
+            See Our Flowers <FaArrowRight />
           </Link>
         </div>
         <div className="about-hero-visual">
@@ -96,20 +94,19 @@ export default function About() {
           </div>
         </div>
         <div className="about-mission-text">
-          <p className="about-section-eyebrow">Our Philosophy</p>
-          <h2 className="about-section-title">Flowers Are the<br />Language of the Soul</h2>
+          <p className="about-section-eyebrow">What We Believe</p>
+          <h2 className="about-section-title">Flowers Say What<br />Words Cannot</h2>
           <p className="about-mission-body">
-            At Fleurs de Kataria, we believe that flowers are more than decoration — they are 
-            feelings made tangible. Every arrangement we create is a conversation between 
-            nature and emotion, designed to speak when words fall short.
+            At Fleurs de Kataria, we believe flowers are more than just decoration — they carry
+            feelings. Every bouquet we make is a mix of nature and emotion, made to say
+            what words sometimes cannot.
           </p>
           <p className="about-mission-body">
-            Founded in the heart of YNR, Haryana, our boutique atelier specialises in bespoke 
-            luxury florals for weddings, gifting, corporate events, and everyday moments 
-            that deserve to be extraordinary.
+            Started in YNR, Haryana, our flower studio makes custom bouquets
+            for weddings, gifts, events, and everyday moments that deserve something special.
           </p>
           <Link to="/custom-request" className="about-cta-link">
-            Commission a Bespoke Piece <FaArrowRight />
+            Order a Custom Bouquet <FaArrowRight />
           </Link>
         </div>
       </section>
@@ -117,8 +114,8 @@ export default function About() {
       {/* ── Values ── */}
       <section className="about-values">
         <div className="about-values-header">
-          <p className="about-section-eyebrow">What Sets Us Apart</p>
-          <h2 className="about-section-title">The Fleurs de Kataria Promise</h2>
+          <p className="about-section-eyebrow">Why Choose Us</p>
+          <h2 className="about-section-title">Our Promise to You</h2>
         </div>
         <div className="about-values-grid">
           {VALUES.map((v, i) => (
@@ -136,8 +133,8 @@ export default function About() {
       {/* ── Team ── */}
       <section className="about-team">
         <div className="about-values-header">
-          <p className="about-section-eyebrow">The Artisans</p>
-          <h2 className="about-section-title">Hands Behind the Blooms</h2>
+          <p className="about-section-eyebrow">Our Team</p>
+          <h2 className="about-section-title">The People Behind the Flowers</h2>
         </div>
         <div className="about-team-grid">
           {TEAM.map((t, i) => (
@@ -153,17 +150,17 @@ export default function About() {
       {/* ── CTA Banner ── */}
       <section className="about-cta-banner">
         <div className="about-cta-glow" />
-        <p className="about-section-eyebrow" style={{ color: 'rgba(251,226,159,0.7)' }}>Ready to Begin?</p>
+        <p className="about-section-eyebrow" style={{ color: 'rgba(251,226,159,0.7)' }}>Ready to Start?</p>
         <h2 className="about-section-title" style={{ color: '#FFF', fontSize: '2.8rem' }}>
-          Let's Create Something<br />
-          <span style={{ color: '#FBE29F' }}>Unforgettable Together</span>
+          Let's Make Something<br />
+          <span style={{ color: '#FBE29F' }}>Special Together</span>
         </h2>
         <p style={{ color: 'rgba(255,255,255,0.5)', maxWidth: '500px', margin: '1rem auto 2.5rem', lineHeight: '1.8' }}>
-          Whether it's a grand wedding or a small daily luxury — we're here to craft the perfect floral moment for you.
+          Whether it's a big wedding or a small everyday moment — we're here to make the perfect flowers for you.
         </p>
         <div className="about-cta-buttons">
-          <Link to="/collection" className="about-btn-primary">Shop Collection</Link>
-          <Link to="/custom-request" className="about-btn-secondary">Bespoke Request</Link>
+          <Link to="/collection" className="about-btn-primary">Shop Flowers</Link>
+          <Link to="/custom-request" className="about-btn-secondary">Custom Order</Link>
         </div>
       </section>
 

@@ -3,11 +3,12 @@ import { AuthContext } from '../context/AuthContext';
 import { FaBoxOpen, FaClipboardList, FaShuttleVan, FaCheckCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
-const STATUS_STEPS = ['PENDING', 'PREPARING', 'OUT FOR DELIVERY', 'DELIVERED'];
-const BESPOKE_STEPS = ['PENDING', 'REVIEWED', 'ACCEPTED', 'COMPLETED'];
+const STATUS_STEPS = ['CONFIRMED', 'PREPARING', 'OUT FOR DELIVERY', 'DELIVERED'];
+const BESPOKE_STEPS = ['SUBMITTED', 'REVIEWED', 'ACCEPTED', 'COMPLETED'];
 
 const OrderTracker = ({ currentStatus }) => {
-  const currentIndex = STATUS_STEPS.indexOf(currentStatus.toUpperCase());
+  const displayStatus = ['PENDING', 'CONFIRMED', 'ACCEPTED'].includes(currentStatus.toUpperCase()) ? 'CONFIRMED' : currentStatus.toUpperCase();
+  const currentIndex = STATUS_STEPS.indexOf(displayStatus);
   
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2rem 0', position: 'relative', marginBottom: '1rem' }}>
@@ -24,7 +25,7 @@ const OrderTracker = ({ currentStatus }) => {
               width: '40px', 
               height: '40px', 
               borderRadius: '50%', 
-              background: isCurrent ? '#E60045' : isActive ? '#9C1355' : 'rgba(255,255,255,0.1)', 
+              background: (step === 'CONFIRMED' && isActive) ? '#10b981' : (isCurrent ? 'var(--primary)' : isActive ? 'var(--secondary)' : 'rgba(255,255,255,0.1)'), 
               padding: '10px',
               display: 'flex', 
               justifyContent: 'center', 
@@ -32,7 +33,7 @@ const OrderTracker = ({ currentStatus }) => {
               border: isActive ? '2px solid #FBE29F' : '2px solid transparent',
               transition: 'all 0.3s'
             }}>
-              {step === 'PENDING' && <FaClipboardList color={isActive ? 'var(--text-main)' : 'var(--text-muted)'} />}
+              {step === 'CONFIRMED' && <FaCheckCircle color={isActive ? '#FFFFFF' : 'var(--text-muted)'} size={20} />}
               {step === 'PREPARING' && <FaBoxOpen color={isActive ? 'var(--text-main)' : 'var(--text-muted)'} />}
               {step === 'OUT FOR DELIVERY' && <FaShuttleVan color={isActive ? 'var(--text-main)' : 'var(--text-muted)'} />}
               {step === 'DELIVERED' && <FaCheckCircle color={isActive ? 'var(--text-main)' : 'var(--text-muted)'} />}
@@ -46,39 +47,41 @@ const OrderTracker = ({ currentStatus }) => {
 };
 
 const BespokeTracker = ({ currentStatus }) => {
-  const currentIndex = BESPOKE_STEPS.indexOf(currentStatus.toUpperCase());
+  const displayStatus = ['PENDING', 'SUBMITTED'].includes(currentStatus.toUpperCase()) ? 'SUBMITTED' : currentStatus.toUpperCase();
+  const currentIndex = BESPOKE_STEPS.indexOf(displayStatus);
   const steps = [
-    { name: 'PENDING', icon: FaClipboardList },
-    { name: 'REVIEWED', icon: FaClipboardList }, // Could use another icon if imported
+    { name: 'SUBMITTED', icon: FaClipboardList },
+    { name: 'REVIEWED', icon: FaBoxOpen },
     { name: 'ACCEPTED', icon: FaCheckCircle },
     { name: 'COMPLETED', icon: FaCheckCircle }
   ];
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1.5rem 0', position: 'relative', marginBottom: '1rem', width: '100%' }}>
-      <div style={{ position: 'absolute', top: '50%', left: '0', right: '0', height: '2px', background: 'rgba(255,255,255,0.05)', zIndex: 0 }}></div>
-      <div style={{ position: 'absolute', top: '50%', left: '0', height: '2px', background: '#FBE29F', width: `${(currentIndex / 3) * 100}%`, zIndex: 1, transition: 'width 0.5s' }}></div>
-      
-      {BESPOKE_STEPS.map((step, idx) => {
+    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '2rem 0', position: 'relative', marginBottom: '1rem', width: '100%' }}>
+      <div style={{ position: 'absolute', top: '50%', left: '0', right: '0', height: '2px', background: 'var(--glass-border)', zIndex: 0 }}></div>
+      <div style={{ position: 'absolute', top: '50%', left: '0', height: '2px', background: 'var(--primary)', width: `${(currentIndex / 3) * 100}%`, zIndex: 1, transition: 'width 0.5s ease-in-out' }}></div>
+
+      {steps.map((step, idx) => {
         const isActive = idx <= currentIndex;
         const isCurrent = idx === currentIndex;
+        const Icon = step.icon;
         return (
-          <div key={step} style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-            <div style={{ 
-              width: '32px', 
-              height: '32px', 
-              borderRadius: '50%', 
-              background: isCurrent ? '#FBE29F' : isActive ? 'rgba(251,226,159,0.3)' : 'rgba(255,255,255,0.05)', 
-              display: 'flex', 
-              justifyContent: 'center', 
+          <div key={step.name} style={{ zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              background: (step.name === 'SUBMITTED' && isActive) ? '#10b981' : (isCurrent ? 'var(--primary)' : isActive ? 'var(--secondary)' : 'rgba(255,255,255,0.1)'),
+              padding: '10px',
+              display: 'flex',
+              justifyContent: 'center',
               alignItems: 'center',
-              border: '1px solid',
-              borderColor: isCurrent ? '#FFF' : 'transparent',
+              border: isActive ? '2px solid var(--accent)' : '2px solid transparent',
               transition: 'all 0.3s'
             }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: isActive ? '#000' : '#444' }}></div>
+              <Icon color={isActive ? '#FFFFFF' : 'var(--text-muted)'} size={18} />
             </div>
-            <span style={{ fontSize: '0.6rem', color: isActive ? '#FBE29F' : '#666', textTransform: 'uppercase', letterSpacing: '1px' }}>{step}</span>
+            <span style={{ fontSize: '0.7rem', color: isActive ? 'var(--accent)' : 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: isCurrent ? 'bold' : 'normal' }}>{step.name}</span>
           </div>
         );
       })}
@@ -187,7 +190,7 @@ export default function Orders() {
                       </div>
                       <div style={{ textAlign: 'right' }}>
                          <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Status</p>
-                         <p style={{ margin: 0, color: 'var(--text-main)', fontSize: '0.9rem' }}>{order.status}</p>
+                         <p style={{ margin: 0, color: 'var(--text-main)', fontSize: '0.9rem' }}>{['Pending', 'Confirmed', 'Accepted'].includes(order.status) ? 'Confirmed' : order.status}</p>
                       </div>
                     </div>
                   </div>

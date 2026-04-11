@@ -67,11 +67,10 @@ export default function AdminDashboard() {
       const url = editingFlower ? `/api/admin/flowers/${editingFlower.id}` : '/api/admin/flowers';
       
       const data = new FormData();
-      data.append('name', flowerForm.name);
+      data.append('name', flowerForm.category || 'Commissioned Piece');
       data.append('description', flowerForm.description);
       data.append('price', flowerForm.price);
       data.append('category', flowerForm.category);
-      data.append('color', flowerForm.color);
       data.append('occasion', flowerForm.occasion);
       if (e.target.flower_file.files[0]) {
         data.append('flower_file', e.target.flower_file.files[0]);
@@ -220,11 +219,11 @@ export default function AdminDashboard() {
                       <h4 style={{ fontFamily: 'Cinzel, serif', color: 'var(--accent)', fontSize: '1rem', marginBottom: '1.5rem', textAlign: 'center' }}>Fulfillment</h4>
                       <div style={{ marginBottom: '1.2rem' }}>
                         <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Current Status</label>
-                        <select className="filter-select" value={statusMap[order.id] || order.status} onChange={(e) => {
+                        <select className="filter-select" value={statusMap[order.id] || (['Pending','Accepted'].includes(order.status) ? 'Confirmed' : order.status)} onChange={(e) => {
                           const newStatus = e.target.value;
                           setStatusMap(prev => ({ ...prev, [order.id]: newStatus }));
                         }}>
-                          <option value="Pending">Pending</option>
+                          <option value="Confirmed">Confirmed</option>
                           <option value="Preparing">Preparing</option>
                           <option value="Out for Delivery">Out for Delivery</option>
                           <option value="Delivered">Delivered</option>
@@ -285,7 +284,7 @@ export default function AdminDashboard() {
                       <div style={{ flex: '0 0 250px', background: 'var(--glass)', padding: '1.5rem', borderRadius: '12px', border: '1px solid var(--glass-border)' }}>
                         <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '1rem', textAlign: 'center' }}>Set Inquiry Status</label>
                         <select className="filter-select" value={req.status} onChange={(e) => updateRequest(req.id, e.target.value)} style={{ marginBottom: '1rem' }}>
-                          <option value="Pending">Pending</option>
+                          <option value="Submitted">Submitted</option>
                           <option value="Reviewed">Reviewed</option>
                           <option value="Accepted">Accepted</option>
                           <option value="Completed">Completed</option>
@@ -331,14 +330,10 @@ export default function AdminDashboard() {
 
         {/* Flower Modal */}
         {showFlowerModal && (
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 2000 }}>
-            <div style={{ background: '#0D050A', border: '1px solid #FBE29F', padding: '3rem', borderRadius: '24px', width: '600px', maxWidth: '90%' }}>
-              <h2 style={{ fontFamily: 'Cinzel, serif', color: '#FBE29F', marginBottom: '2rem', textAlign: 'center' }}>{editingFlower ? 'Edit Masterpiece' : 'Commission New Masterpiece'}</h2>
+          <div style={{ position: 'fixed', inset: 0, background: 'var(--nav-bg)', backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 2000 }}>
+            <div style={{ background: 'var(--bg-deep)', border: '1px solid var(--accent)', padding: '3rem', borderRadius: '24px', width: '600px', maxWidth: '90%', boxShadow: '0 10px 40px var(--btn-shadow)' }}>
+              <h2 style={{ fontFamily: 'Cinzel, serif', color: 'var(--accent)', marginBottom: '2rem', textAlign: 'center' }}>{editingFlower ? 'Edit Masterpiece' : 'Commission New Masterpiece'}</h2>
               <form onSubmit={handleFlowerSubmit} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                <div style={{ gridColumn: 'span 2' }}>
-                  <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Full Name</label>
-                  <input required className="filter-input" value={flowerForm.name} onChange={e => setFlowerForm({...flowerForm, name: e.target.value})} />
-                </div>
                 <div style={{ gridColumn: 'span 2' }}>
                   <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Description</label>
                   <textarea required className="filter-input" style={{ height: '80px', padding: '1rem' }} value={flowerForm.description} onChange={e => setFlowerForm({...flowerForm, description: e.target.value})} />
@@ -359,10 +354,6 @@ export default function AdminDashboard() {
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Color</label>
-                  <input required className="filter-input" value={flowerForm.color} onChange={e => setFlowerForm({...flowerForm, color: e.target.value})} placeholder="e.g. Royal Red" />
-                </div>
-                <div>
                   <label style={{ display: 'block', color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '0.5rem' }}>Occasion</label>
                   <input required className="filter-input" value={flowerForm.occasion} onChange={e => setFlowerForm({...flowerForm, occasion: e.target.value})} placeholder="e.g. Anniversary" />
                 </div>
@@ -372,8 +363,8 @@ export default function AdminDashboard() {
                   {editingFlower && <p style={{ fontSize: '0.7rem', color: 'var(--primary)', marginTop: '0.5rem' }}>Leave blank to keep current media</p>}
                 </div>
                 <div style={{ gridColumn: 'span 2', display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                  <button type="submit" className="btn" style={{ flex: 2 }}>{editingFlower ? 'Update Masterpiece' : 'Add to Collection'}</button>
-                  <button type="button" className="btn" style={{ flex: 1, background: 'transparent', border: '1px solid #A19BAA', color: 'var(--text-muted)' }} onClick={() => setShowFlowerModal(false)}>Cancel</button>
+                  <button type="submit" disabled={loading} className="btn" style={{ flex: 2 }}>{loading ? 'Processing...' : (editingFlower ? 'Update Masterpiece' : 'Add to Collection')}</button>
+                  <button type="button" disabled={loading} className="btn" style={{ flex: 1, background: 'transparent', border: '1px solid #A19BAA', color: 'var(--text-muted)' }} onClick={() => setShowFlowerModal(false)}>Cancel</button>
                 </div>
               </form>
             </div>
@@ -382,9 +373,9 @@ export default function AdminDashboard() {
 
         {/* Custom Confirmation Modal */}
         {showConfirm && (
-          <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
-            <div style={{ background: 'rgba(15,5,10,0.95)', border: '1px solid rgba(230,0,69,0.3)', padding: '2.5rem', borderRadius: '24px', maxWidth: '400px', width: '100%', textAlign: 'center', boxShadow: '0 0 40px rgba(230,0,69,0.2)' }}>
-              <h3 style={{ fontFamily: 'Cinzel, serif', color: '#FBE29F', marginBottom: '1rem', fontSize: '1.5rem' }}>Are you sure?</h3>
+          <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'var(--nav-bg)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '1rem' }}>
+            <div style={{ background: 'var(--bg-deep)', border: '1px solid var(--glass-border)', padding: '2.5rem', borderRadius: '24px', maxWidth: '400px', width: '100%', textAlign: 'center', boxShadow: '0 0 40px var(--btn-shadow)' }}>
+              <h3 style={{ fontFamily: 'Cinzel, serif', color: 'var(--accent)', marginBottom: '1rem', fontSize: '1.5rem' }}>Are you sure?</h3>
               <p style={{ color: 'var(--text-muted)', marginBottom: '2rem', lineHeight: '1.6' }}>{confirmData.message}</p>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button 
@@ -395,7 +386,7 @@ export default function AdminDashboard() {
                 </button>
                 <button 
                   onClick={executeDelete}
-                  style={{ flex: 1, padding: '0.8rem', background: '#E60045', border: 'none', color: 'var(--text-main)', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 5px 15px rgba(230,0,69,0.3)' }}
+                  style={{ flex: 1, padding: '0.8rem', background: 'var(--primary)', border: 'none', color: '#FFF', borderRadius: '12px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 5px 15px var(--btn-shadow)' }}
                 >
                   Yes, Erase
                 </button>

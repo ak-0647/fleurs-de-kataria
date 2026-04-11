@@ -32,7 +32,7 @@ export default function Collection() {
       const data = await response.json();
       setFlowers(data);
     } catch (err) {
-      toast.error('Failed to load masterpieces');
+      toast.error('Could not load flowers. Please try again.');
     } finally {
       setTimeout(() => setLoading(false), 500); // Artificial delay for smoother feel
     }
@@ -46,19 +46,19 @@ export default function Collection() {
     <div style={{ paddingTop: '100px', minHeight: '100vh', background: 'var(--bg-deep)', color: 'var(--text-main)' }}>
       <header style={{ textAlign: 'center', padding: '5rem 0 3rem' }}>
         <h1 style={{ fontFamily: 'Cinzel, serif', fontSize: 'clamp(2.5rem, 8vw, 4.5rem)', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '8px', margin: 0 }}>
-          The Masterpiece Collection
+          Our Flower Collection
         </h1>
-        <p style={{ color: 'var(--text-muted)', letterSpacing: '4px', textTransform: 'uppercase', marginTop: '1rem', fontSize: '0.9rem' }}>Curated Excellence</p>
+        <p style={{ color: 'var(--text-muted)', letterSpacing: '4px', textTransform: 'uppercase', marginTop: '1rem', fontSize: '0.9rem' }}>Fresh & Beautiful</p>
         <div style={{ width: '80px', height: '1px', background: 'var(--primary)', margin: '2rem auto' }}></div>
       </header>
 
       <div style={{ maxWidth: '1600px', margin: '0 auto', display: 'flex', gap: '4rem', padding: '0 3rem 6rem' }}>
         {/* Sidebar Filters */}
         <aside style={{ width: '300px', flexShrink: 0, background: 'var(--sidebar-bg)', padding: '2.5rem', borderRadius: '24px', border: '1px solid var(--glass-border)', height: 'fit-content', position: 'sticky', top: '120px', backdropFilter: 'blur(10px)' }}>
-          <h3 style={{ fontFamily: 'Cinzel, serif', color: 'var(--accent)', marginBottom: '2rem', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Curate</h3>
+          <h3 style={{ fontFamily: 'Cinzel, serif', color: 'var(--accent)', marginBottom: '2rem', fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Filter</h3>
           
           <div className="filter-group" style={{ marginBottom: '2rem' }}>
-            <label style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: '0.8rem' }}>Search Masterpieces</label>
+            <label style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: '0.8rem' }}>Search Flowers</label>
             <input 
               type="text" 
               name="search" 
@@ -71,9 +71,9 @@ export default function Collection() {
           </div>
 
           <div className="filter-group" style={{ marginBottom: '2rem' }}>
-            <label style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: '0.8rem' }}>Flower Essence</label>
+            <label style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: '0.8rem' }}>Flower Type</label>
             <select name="category" value={filters.category} onChange={handleFilterChange} className="filter-select">
-              <option value="">All Essences</option>
+              <option value="">All Types</option>
               <option value="Rose">Roses</option>
               <option value="Lily">Lilies</option>
               <option value="Tulip">Tulips</option>
@@ -83,9 +83,9 @@ export default function Collection() {
           </div>
 
           <div className="filter-group" style={{ marginBottom: '2rem' }}>
-            <label style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: '0.8rem' }}>Color Palette</label>
+            <label style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: '0.8rem' }}>Color</label>
             <select name="color" value={filters.color} onChange={handleFilterChange} className="filter-select">
-              <option value="">All Hues</option>
+              <option value="">All Colors</option>
               <option value="Red">Crimson Red</option>
               <option value="White">Pure White</option>
               <option value="Pink">Soft Pink</option>
@@ -107,7 +107,7 @@ export default function Collection() {
           </div>
 
           <div className="filter-group" style={{ marginBottom: '2.5rem' }}>
-            <label style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: '0.8rem' }}>Price Spectrum (₹)</label>
+            <label style={{ color: 'var(--text-muted)', fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '2px', display: 'block', marginBottom: '0.8rem' }}>Price Range (₹)</label>
             <div style={{ display: 'flex', gap: '1rem' }}>
               <input type="number" name="price_min" placeholder="Min" value={filters.price_min} onChange={handleFilterChange} className="filter-input" />
               <input type="number" name="price_max" placeholder="Max" value={filters.price_max} onChange={handleFilterChange} className="filter-input" />
@@ -120,7 +120,7 @@ export default function Collection() {
             onMouseOver={e => e.target.style.borderColor = 'var(--accent)'}
             onMouseOut={e => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
           >
-            Reset Curation
+            Clear Filters
           </button>
         </aside>
 
@@ -134,7 +134,7 @@ export default function Collection() {
             </div>
           ) : flowers.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '10rem 0', color: 'var(--text-muted)', background: 'var(--skeleton-bg)', borderRadius: '24px' }}>
-              <p style={{ fontSize: '1.2rem', fontFamily: 'Cinzel, serif', color: 'var(--accent)', letterSpacing: '2px' }}>A masterpiece of this nature has yet to be found.</p>
+              <p style={{ fontSize: '1.2rem', fontFamily: 'Cinzel, serif', color: 'var(--accent)', letterSpacing: '2px' }}>No flowers found. Try different filters.</p>
               <button 
                 onClick={() => setFilters({ category: '', color: '', occasion: '', price_min: '', price_max: '', search: '' })}
                 style={{ marginTop: '2rem', background: 'none', border: 'none', color: 'var(--primary)', textDecoration: 'underline', cursor: 'pointer', fontSize: '0.9rem' }}
@@ -165,7 +165,7 @@ export default function Collection() {
                         className="btn" 
                         style={{ padding: '0.8rem 1.5rem', fontSize: '0.8rem', display: 'flex', alignItems: 'center', gap: '0.8rem' }}
                       >
-                        <FaShoppingCart /> Reserve
+                        <FaShoppingCart /> Add to Cart
                       </button>
                     </div>
                   </div>

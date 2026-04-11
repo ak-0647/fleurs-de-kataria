@@ -73,7 +73,7 @@ export default function Dashboard() {
       </div>
 
       {/* Luxury Footer */}
-      <footer ref={footerRef} style={{ width: '100%', position: 'relative', zIndex: 10, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)', borderTop: '1px solid rgba(255,255,255,0.05)', padding: '4rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', marginTop: 'auto' }}>
+      <footer ref={footerRef} style={{ width: '100%', position: 'relative', zIndex: 10, background: 'var(--glass)', backdropFilter: 'blur(10px)', borderTop: '1px solid var(--glass-border)', padding: '4rem 2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', marginTop: 'auto' }}>
         <h3 style={{ fontFamily: 'Cinzel, serif', color: 'var(--accent)', fontSize: '1.8rem', letterSpacing: '2px', margin: 0 }}>Fleurs de Kataria</h3>
         
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '3rem', color: 'var(--text-muted)' }}>
@@ -83,7 +83,7 @@ export default function Dashboard() {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <FaEnvelope color="var(--primary)" size={20} />
-            <a href="mailto:akshitasharma1205@gmail.com" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.3s' }} onMouseOver={e => e.target.style.color='var(--text-main)'} onMouseOut={e => e.target.style.color='var(--text-muted)'}>akshitasharma1205@gmail.com</a>
+            <a href="mailto:katariadiljot@gmail.com" style={{ color: 'var(--text-muted)', textDecoration: 'none', transition: 'color 0.3s' }} onMouseOver={e => e.target.style.color='var(--text-main)'} onMouseOut={e => e.target.style.color='var(--text-muted)'}>katariadiljot@gmail.com</a>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
             <FaPhoneAlt color="var(--primary)" size={20} />

@@ -213,6 +213,28 @@ async function initSchemas(p) {
       );
     `);
 
+    await p.query(`
+      CREATE TABLE IF NOT EXISTS newsletter_subscriptions (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+
+    await p.query(`
+      CREATE TABLE IF NOT EXISTS reviews (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT,
+        name VARCHAR(255) NOT NULL,
+        rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+        title VARCHAR(255),
+        review TEXT NOT NULL,
+        occasion VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+      );
+    `);
+
     // Seed initial flowers if empty
     const [flowerCount] = await p.query('SELECT COUNT(*) as count FROM flowers');
     if (flowerCount[0].count === 0) {
@@ -476,7 +498,7 @@ app.post('/api/orders', authenticateUser, async (req, res) => {
 
     try {
       const [orderResult] = await connection.query(
-        'INSERT INTO orders (user_id, total_amount, delivery_address) VALUES (?, ?, ?)',
+        `INSERT INTO orders (user_id, total_amount, delivery_address, status) VALUES (?, ?, ?, 'Confirmed')`,
         [userId, total_amount, delivery_address]
       );
       const orderId = orderResult.insertId;
@@ -491,28 +513,43 @@ app.post('/api/orders', authenticateUser, async (req, res) => {
       await connection.commit();
       connection.release();
 
-      // Send confirmation email inside background
-      const [userRows] = await pool.query('SELECT email FROM users WHERE id = ?', [userId]);
+      // Send confirmation email to customer
+      const [userRows] = await pool.query('SELECT email, full_name FROM users WHERE id = ?', [userId]);
       if (userRows.length > 0) {
         const recipient = userRows[0].email;
+        const customerName = userRows[0].full_name || 'Valued Customer';
         console.log(`📧 Attempting to send order confirmation to: ${recipient}`);
 
-        await transporter.sendMail({
+        transporter.sendMail({
           from: `"Fleurs de Kataria" <${process.env.SMTP_USER}>`,
           to: recipient,
-          subject: `Order Confirmation - #${orderId}`,
-          html: `<h3>Thank you for your order!</h3><p>Your Order ID is <strong>#${orderId}</strong>. Total Amount: <strong>₹${total_amount}</strong>.</p><p>We have received your order and are currently preparing it with love.</p>`
+          subject: `🌸 Order Confirmed - #${orderId} | Fleurs de Kataria`,
+          html: `
+            <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #FAF3F0; padding: 40px; border-radius: 12px;">
+              <h1 style="color: #A0243E; font-size: 28px; margin-bottom: 8px;">Fleurs de Kataria</h1>
+              <p style="color: #7A5C6A; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">Order Confirmed</p>
+              <hr style="border: none; border-top: 1px solid #E8C4C4; margin: 24px 0;" />
+              <p style="color: #2C1A24; font-size: 16px;">Dear <strong>${customerName}</strong>,</p>
+              <p style="color: #2C1A24;">Your order has been received and is now <strong>confirmed</strong>. Our artisans will begin crafting your floral masterpiece with the utmost care.</p>
+              <div style="background: #fff; border-radius: 8px; padding: 24px; margin: 24px 0; border-left: 4px solid #C9315F;">
+                <p style="margin: 0 0 8px; color: #7A5C6A; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">Order Details</p>
+                <p style="margin: 0 0 4px; color: #2C1A24; font-size: 20px; font-weight: bold;">Order #${orderId}</p>
+                <p style="margin: 0; color: #C9315F; font-size: 18px;">Total: ₹${total_amount}</p>
+              </div>
+              <p style="color: #7A5C6A; font-size: 14px;">You can track your order status anytime from your <strong>Orders</strong> page on our website.</p>
+              <p style="color: #7A5C6A; font-size: 13px; margin-top: 32px;">With floral love,<br/><em>Fleurs de Kataria</em></p>
+            </div>
+          `
         }).then(() => console.log(`✅ Confirmation email sent to ${recipient}`))
           .catch(e => console.error(`❌ Email failed for ${recipient}:`, e));
         
         // Notify Admin
-        await transporter.sendMail({
+        transporter.sendMail({
           from: `"Fleurs de Kataria System" <${process.env.SMTP_USER}>`,
           to: process.env.SMTP_USER,
           subject: `✨ New Order Alert - #${orderId}`,
-          html: `<p>A new order (ID: #${orderId}) for ₹${total_amount} has been placed by ${recipient}.</p>`
-        }).then(() => console.log(`🔔 Admin alerted for Order #${orderId}`))
-          .catch(e => console.error("Admin Alert failed:", e));
+          html: `<p>A new order (ID: #${orderId}) for ₹${total_amount} has been placed by ${customerName} (${recipient}).</p>`
+        }).catch(e => console.error("Admin Alert failed:", e));
       } else {
         console.warn(`⚠️ No user found with ID ${userId}, skipping email.`);
       }
@@ -544,16 +581,44 @@ app.post('/api/custom-requests', authenticateUser, upload.single('image'), async
       [userId, flower_selection, wrapping_style, ribbon_color, note, filePath, budget]
     );
 
-    // Notify Admin via Email
+    // Send emails to both customer & admin
     const [userRows] = await pool.query('SELECT email, full_name FROM users WHERE id = ?', [userId]);
     if (userRows.length > 0) {
-      await transporter.sendMail({
+      const recipient = userRows[0].email;
+      const customerName = userRows[0].full_name || 'Valued Customer';
+
+      // Confirmation email to customer
+      transporter.sendMail({
+        from: `"Fleurs de Kataria" <${process.env.SMTP_USER}>`,
+        to: recipient,
+        subject: `🌸 Bespoke Request Received | Fleurs de Kataria`,
+        html: `
+          <div style="font-family: Georgia, serif; max-width: 600px; margin: 0 auto; background: #FAF3F0; padding: 40px; border-radius: 12px;">
+            <h1 style="color: #A0243E; font-size: 28px; margin-bottom: 8px;">Fleurs de Kataria</h1>
+            <p style="color: #7A5C6A; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;">Bespoke Request Confirmed</p>
+            <hr style="border: none; border-top: 1px solid #E8C4C4; margin: 24px 0;" />
+            <p style="color: #2C1A24;">Dear <strong>${customerName}</strong>,</p>
+            <p style="color: #2C1A24;">Your bespoke creation request has been received! Our master florists will review it shortly and reach out to you with a personalised consultation.</p>
+            <div style="background: #fff; border-radius: 8px; padding: 24px; margin: 24px 0; border-left: 4px solid #C9315F;">
+              <p style="margin: 0 0 8px; color: #7A5C6A; font-size: 12px; text-transform: uppercase; letter-spacing: 2px;">Your Request</p>
+              <p style="margin: 0 0 4px; color: #2C1A24;"><strong>Floral Selection:</strong> ${flower_selection}</p>
+              <p style="margin: 0 0 4px; color: #2C1A24;"><strong>Wrapping Style:</strong> ${wrapping_style || 'Standard'}</p>
+              <p style="margin: 0; color: #C9315F;"><strong>Budget:</strong> ₹${budget || 'Open'}</p>
+            </div>
+            <p style="color: #7A5C6A; font-size: 14px;">You can track the status of your bespoke request from your <strong>Orders</strong> page.</p>
+            <p style="color: #7A5C6A; font-size: 13px; margin-top: 32px;">With floral love,<br/><em>Fleurs de Kataria</em></p>
+          </div>
+        `
+      }).catch(e => console.error("Customer Bespoke Email fail:", e));
+
+      // Notify Admin
+      transporter.sendMail({
         from: `"Fleurs de Kataria System" <${process.env.SMTP_USER}>`,
         to: process.env.SMTP_USER,
-        subject: `🎨 New Custom Request Alert`,
+        subject: `🎨 New Custom Request from ${customerName}`,
         html: `
           <h3>New Bespoke Creation Request</h3>
-          <p><strong>Customer:</strong> ${userRows[0].full_name} (${userRows[0].email})</p>
+          <p><strong>Customer:</strong> ${customerName} (${recipient})</p>
           <p><strong>Flower Selection:</strong> ${flower_selection}</p>
           <p><strong>Budget:</strong> ₹${budget || 'Not specified'}</p>
           <p>Check the Admin Dashboard for full details and attachments.</p>
@@ -742,6 +807,74 @@ app.post('/api/inquiries', async (req, res) => {
     res.status(201).json({ success: true, message: 'Inquiry received' });
   } catch (err) {
     res.status(500).json({ error: 'Failed to submit inquiry' });
+  }
+});
+
+app.post('/api/newsletter/subscribe', async (req, res) => {
+  try {
+    if (!pool) return res.status(500).json({ error: 'Database not initialized' });
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    // IGNORE ensures duplicate emails won't crash the server, just ignore the insert
+    await pool.query(
+      'INSERT IGNORE INTO newsletter_subscriptions (email) VALUES (?)',
+      [email]
+    );
+
+    // Send welcome email
+    await transporter.sendMail({
+      from: `"Fleurs de Kataria" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: 'Welcome to the Inner Circle 🌸',
+      html: `
+        <div style="font-family: 'Cinzel', serif; background: #050308; color: #FFF; padding: 40px; text-align: center; border-radius: 8px;">
+          <h2 style="color: #FBE29F; font-style: italic;">Fleurs de Kataria</h2>
+          <h3 style="font-family: 'Outfit', sans-serif;">Welcome to the Inner Circle!</h3>
+          <p style="font-family: 'Outfit', sans-serif; color: #E8E6EB;">Thank you for subscribing. You will now receive exclusive previews and floral care tips directly from our master florists.</p>
+          <p style="color: #A19BAA; font-size: 12px; margin-top: 30px; font-family: 'Outfit', sans-serif;">Fleurs de Kataria, The Art of Eternal Bloom</p>
+        </div>
+      `
+    }).catch(e => console.error("Newsletter Email Error:", e)); // Catch email errors without failing the request
+
+    res.status(201).json({ success: true, message: 'Subscribed successfully' });
+  } catch (err) {
+    console.error('Newsletter Error:', err);
+    res.status(500).json({ error: 'Failed to subscribe: ' + err.message });
+  }
+});
+
+// ── Reviews ──────────────────────────────────────────────
+app.get('/api/reviews', async (req, res) => {
+  try {
+    const [rows] = await pool.query(
+      'SELECT id, name, rating, title, review, occasion, created_at FROM reviews ORDER BY created_at DESC'
+    );
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
+  }
+});
+
+app.post('/api/reviews', authenticateUser, async (req, res) => {
+  try {
+    const { name, rating, title, review, occasion } = req.body;
+    if (!name || !rating || !review) {
+      return res.status(400).json({ error: 'Name, rating, and review are required' });
+    }
+    const ratingNum = parseInt(rating);
+    if (ratingNum < 1 || ratingNum > 5) {
+      return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+    }
+    await pool.query(
+      'INSERT INTO reviews (user_id, name, rating, title, review, occasion) VALUES (?, ?, ?, ?, ?, ?)',
+      [req.user.id, name, ratingNum, title || null, review, occasion || null]
+    );
+    res.status(201).json({ message: 'Review submitted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to submit review' });
   }
 });
 

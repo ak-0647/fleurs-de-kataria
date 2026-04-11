@@ -67,7 +67,7 @@ export default function CustomRequest() {
       <form onSubmit={handleSubmit} className="form-container" style={{ width: '90%', maxWidth: '700px', background: 'transparent', border: 'none', boxShadow: 'none' }}>
         <h2 style={{ color: 'var(--accent)', fontFamily: 'Cinzel, serif', textAlign: 'center', margin: '0 0 1rem 0', fontSize: '2.5rem' }}>Make Your Own</h2>
         <p style={{ textAlign: 'center', color: 'var(--text-muted)', marginBottom: '3rem', fontSize: '1.1rem', fontWeight: 300 }}>
-          Design the bouquet of your dreams. Our artisans will bring it to life.
+          Tell us what you want and we'll make it for you.
         </p>
 
         <div className="input-group">

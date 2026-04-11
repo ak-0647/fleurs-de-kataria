@@ -19,16 +19,18 @@ import CustomRequest from './pages/CustomRequest';
 import AdminDashboard from './pages/AdminDashboard';
 import OrderDetail from './pages/OrderDetail';
 import Orders from './pages/Orders';
+import Reviews from './pages/Reviews';
 import Footer from './components/Footer';
 import PetalBackground from './components/PetalBackground';
 import ProtectedRoute from './components/ProtectedRoute';
-import { FaShoppingBag, FaUser, FaSeedling, FaHistory, FaSignOutAlt } from 'react-icons/fa';
+import { FaShoppingBag, FaUser, FaSeedling, FaHistory, FaSignOutAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { Toaster } from 'react-hot-toast';
 
 const Navbar = () => {
   const { user, logout } = React.useContext(AuthContext);
   const { cartItems } = React.useContext(CartContext);
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
@@ -37,15 +39,13 @@ const Navbar = () => {
         <Link to="/" className="logo">
           Fleurs de Kataria
         </Link>
-        <ul className="nav-links">
-          <li><Link to="/collection" className="nav-link"><FaSeedling /> Collection</Link></li>
-          <li><Link to="/about" className="nav-link">About</Link></li>
-          <li><Link to="/custom-request" className="nav-link">Bespoke</Link></li>
+        <ul className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
+          <li><Link to="/collection" className="nav-link" onClick={() => setMobileMenuOpen(false)}><FaSeedling /> Collection</Link></li>
+          <li><Link to="/about" className="nav-link" onClick={() => setMobileMenuOpen(false)}>About</Link></li>
+          <li><Link to="/reviews" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Reviews</Link></li>
+          <li><Link to="/custom-request" className="nav-link" onClick={() => setMobileMenuOpen(false)}>Bespoke</Link></li>
           {user && (
-            <li><Link to="/orders" className="nav-link"><FaHistory /> Orders</Link></li>
-          )}
-          {user && user.role === 'ADMIN' && (
-            <li><Link to="/admin" className="nav-link" style={{ color: 'var(--accent)' }}>Dashboard</Link></li>
+            <li><Link to="/orders" className="nav-link" onClick={() => setMobileMenuOpen(false)}><FaHistory /> Orders</Link></li>
           )}
         </ul>
         <div className="nav-actions">
@@ -60,13 +60,19 @@ const Navbar = () => {
                  <FaUser /> {user.name.split(' ')[0]}
                </div>
                <div className="user-dropdown">
-                 <Link to="/profile" className="dropdown-item">Profile</Link>
-                 <button onClick={() => { logout(); navigate('/'); }} className="dropdown-item logout-btn">Logout</button>
+                 <Link to="/profile" className="dropdown-item" onClick={() => setMobileMenuOpen(false)}>Profile</Link>
+                 {user.role === 'ADMIN' && (
+                   <Link to="/admin" className="dropdown-item" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--accent)' }}>Dashboard</Link>
+                 )}
+                 <button onClick={() => { logout(); navigate('/'); setMobileMenuOpen(false); }} className="dropdown-item logout-btn">Logout</button>
                </div>
             </div>
           ) : (
             <Link to="/login" className="login-pill">Login</Link>
           )}
+          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
         </div>
       </div>
     </nav>
@@ -98,6 +104,7 @@ function App() {
                   <Route path="/checkout" element={<Checkout />} />
                   <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
                   <Route path="/custom-request" element={<CustomRequest />} />
+                  <Route path="/reviews" element={<Reviews />} />
                   <Route path="/admin" element={<ProtectedRoute adminOnly={true}><AdminDashboard /></ProtectedRoute>} />
                   <Route path="/admin/orders/:id" element={<ProtectedRoute adminOnly={true}><OrderDetail /></ProtectedRoute>} />
                 </Routes>

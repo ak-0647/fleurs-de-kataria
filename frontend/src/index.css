@@ -164,6 +164,8 @@ h1, h2, h3, h4, .logo {
   color: var(--accent);
   text-decoration: none;
   letter-spacing: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .nav-links {
@@ -179,6 +181,10 @@ h1, h2, h3, h4, .logo {
   text-transform: uppercase;
   letter-spacing: 2px;
   transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -197,6 +203,41 @@ h1, h2, h3, h4, .logo {
   display: flex;
   align-items: center;
   gap: 1.5rem;
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--nav-bg);
+    padding: 1.5rem;
+    gap: 1.5rem;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .nav-links.active {
+    display: flex;
+  }
+  .mobile-menu-btn {
+    display: block;
+  }
+  
+  .nav-actions {
+    gap: 0.8rem;
+  }
 }
 
 /* Buttons */

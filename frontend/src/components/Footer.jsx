@@ -12,12 +12,24 @@ export default function Footer() {
     e.preventDefault();
     if (!nlEmail.trim()) return;
     setNlLoading(true);
-    // Simulate subscription (no dedicated backend endpoint)
-    await new Promise(r => setTimeout(r, 900));
-    setNlLoading(false);
-    setNlDone(true);
-    toast.success('You\'re in! Welcome to the Inner Circle 🌸');
-    setTimeout(() => { setNlDone(false); setNlEmail(''); }, 4000);
+    try {
+      const res = await fetch(`/api/newsletter/subscribe`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: nlEmail })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Subscription failed');
+      
+      setNlDone(true);
+      toast.success('You\'re subscribed! Welcome 🌸');
+      setTimeout(() => { setNlDone(false); setNlEmail(''); }, 4000);
+    } catch (err) {
+      toast.error(err.message || 'Failed to subscribe. Please try again later.');
+      setNlDone(false);
+    } finally {
+      setNlLoading(false);
+    }
   };
 
   return (
@@ -28,7 +40,7 @@ export default function Footer() {
         <div>
           <h2 style={{ fontFamily: 'Cinzel, serif', color: 'var(--accent)', fontSize: '1.8rem', marginBottom: '1.5rem' }}>Fleurs de Kataria</h2>
           <p style={{ color: 'var(--text-muted)', lineHeight: '1.8', fontSize: '0.9rem' }}>
-            Crafting bespoke floral masterpieces that transcend the ordinary. Every petal tells a story of elegance and grace.
+            We make beautiful flower bouquets for every special moment in your life.
           </p>
           <div style={{ display: 'flex', gap: '1.2rem', marginTop: '2rem' }}>
             <a href="#" style={{ color: 'var(--accent)', fontSize: '1.2rem' }}><FaInstagram /></a>
@@ -39,11 +51,11 @@ export default function Footer() {
 
         {/* Quick Links */}
         <div>
-          <h4 style={{ color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Curated Journeys</h4>
+          <h4 style={{ color: 'var(--text-main)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Quick Links</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <li><Link to="/collection" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>The Collection</Link></li>
-            <li><Link to="/custom-request" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Bespoke Creations</Link></li>
-            <li><Link to="/orders" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Track Your Story</Link></li>
+            <li><Link to="/collection" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Flower Collection</Link></li>
+            <li><Link to="/custom-request" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>Custom Orders</Link></li>
+            <li><Link to="/orders" style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: '0.9rem' }}>My Orders</Link></li>
           </ul>
         </div>
 
@@ -53,7 +65,7 @@ export default function Footer() {
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
             <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}><FaMapMarkerAlt color="var(--primary)" /> YNR, Haryana</li>
             <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}><FaPhoneAlt color="var(--primary)" /> 9416427080</li>
-            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', wordBreak: 'break-all' }}><FaEnvelope color="var(--primary)" style={{ flexShrink: 0 }} /> akshitasharma1205@gmail.com</li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', wordBreak: 'break-all' }}><FaEnvelope color="var(--primary)" style={{ flexShrink: 0 }} /> katariadiljot@gmail.com</li>
           </ul>
         </div>
 
@@ -72,7 +84,7 @@ export default function Footer() {
             <h4 style={{ color: 'var(--accent)', fontFamily: 'Cinzel, serif', fontSize: '1rem', margin: 0 }}>Join the Inner Circle</h4>
           </div>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.82rem', lineHeight: '1.6', margin: 0 }}>
-            Exclusive previews &amp; floral care tips from our master florists.
+            Get updates on new flowers and special deals.
           </p>
           <form onSubmit={handleNewsletter} style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginTop: '0.4rem' }}>
             <input

@@ -220,7 +220,8 @@ export default function Register() {
           width: 100%;
         }
         .reg-step-active {
-          color: rgba(255,255,255,0.85);
+          color: var(--text-main);
+          font-weight: 600;
         }
         .reg-step-dot {
           width: 26px; height: 26px;
@@ -306,7 +307,7 @@ export default function Register() {
           box-shadow: 0 0 0 3px rgba(230,0,69,0.1);
         }
         .reg-select option {
-          background: #1a0010;
+          background: var(--dropdown-bg);
           color: var(--text-main);
         }
 
